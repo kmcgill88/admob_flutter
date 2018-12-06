@@ -1,12 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'admob_banner_controller.dart';
 
 class AdmobBanner extends StatefulWidget {
+  final String adUnitId;
   final void Function(AdmobBannerController) onBannerCreated;
 
   AdmobBanner({
     Key key,
+    @required this.adUnitId,
     this.onBannerCreated,
   }) : super(key: key);
 
@@ -20,6 +23,10 @@ class _AdmobBannerState extends State<AdmobBanner> {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidView(
         viewType: 'admob_flutter/banner',
+        creationParams: <String, String> {
+          "adUnitId": widget.adUnitId
+        },
+        creationParamsCodec: StandardMessageCodec(),
         onPlatformViewCreated: _onPlatformViewCreated,
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {

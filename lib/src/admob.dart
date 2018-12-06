@@ -10,5 +10,7 @@ class Admob {
   }
 
   // Initialize the ads SDK
-  static void initialize(String appID) {}
+  static void initialize(String appID) {
+    _channel.invokeMethod('initialize', appID);
+  }
 }
