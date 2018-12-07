@@ -1,7 +1,6 @@
 package com.shatsy.admobflutter
 
 import android.content.Context
-import android.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler

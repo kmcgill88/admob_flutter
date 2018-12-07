@@ -19,11 +19,27 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
   init {
     channel.setMethodCallHandler(this)
 
-    adView.adSize = AdSize.MEDIUM_RECTANGLE
+    adView.adSize = getSize(args?.get("adSize") as HashMap<*, *>)
     adView.adUnitId = args?.get("adUnitId") as String?
 
     val adRequest = AdRequest.Builder().build()
     adView.loadAd(adRequest)
+  }
+
+  private fun getSize(size: HashMap<*, *>) : AdSize {
+    val width = size.get("width") as Int
+    val height = size.get("height") as Int
+    val name = size.get("name") as String
+
+    return when(name) {
+      "BANNER" -> AdSize.BANNER
+      "LARGE_BANNER" -> AdSize.LARGE_BANNER
+      "MEDIUM_RECTANGLE" -> AdSize.MEDIUM_RECTANGLE
+      "FULL_BANNER" -> AdSize.FULL_BANNER
+      "LEADERBOARD" -> AdSize.LEADERBOARD
+      "SMART_BANNER" -> AdSize.SMART_BANNER
+      else -> AdSize(width, height)
+    }
   }
 
   override fun getView(): View {
@@ -31,10 +47,15 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
-    result.success(null)
+    when(call.method) {
+      "dispose" -> dispose()
+      else -> result.notImplemented()
+    }
   }
 
   override fun dispose() {
+    adView.visibility = View.GONE
     adView.destroy()
+    channel.setMethodCallHandler(null)
   }
 }
