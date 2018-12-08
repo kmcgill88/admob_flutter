@@ -12,8 +12,11 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
-      val channel = MethodChannel(registrar.messenger(), "admob_flutter")
-      channel.setMethodCallHandler(AdmobFlutterPlugin(registrar.context()))
+      val defaultChannel = MethodChannel(registrar.messenger(), "admob_flutter")
+      defaultChannel.setMethodCallHandler(AdmobFlutterPlugin(registrar.context()))
+
+      val interstitialChannel = MethodChannel(registrar.messenger(), "admob_flutter/interstitial")
+      interstitialChannel.setMethodCallHandler(AdmobInterstitial(registrar.context()))
 
       registrar
         .platformViewRegistry()

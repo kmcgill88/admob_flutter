@@ -21,6 +21,13 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  void showSnackBar(BuildContext context, String content) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(content),
+      duration: Duration(seconds: 1),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -88,6 +95,20 @@ class _MyAppState extends State<MyApp> {
                     child: AdmobBanner(
                       adUnitId: 'ca-app-pub-3940256099942544/6300978111',
                       adSize: bannerSize,
+                      listener: (AdmobAdEvent event) {
+                        switch (event) {
+                          case AdmobAdEvent.loaded:
+                            showSnackBar(context, "Admob Banner loaded!");
+                            break;
+                          case AdmobAdEvent.opened:
+                            showSnackBar(context, "Admob Banner opened!");
+                            break;
+                          case AdmobAdEvent.closed:
+                            showSnackBar(context, "Admob Banner closed!");
+                            break;
+                          default:
+                        }
+                      },
                     ),
                   ),
                   Container(

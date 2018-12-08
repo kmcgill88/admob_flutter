@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'admob_banner_controller.dart';
 import 'admob_banner_size.dart';
+import 'admob_events.dart';
 
 class AdmobBanner extends StatefulWidget {
   final String adUnitId;
   final AdmobBannerSize adSize;
+  final void Function(AdmobAdEvent) listener;
   final void Function(AdmobBannerController) onBannerCreated;
 
   AdmobBanner({
     Key key,
     @required this.adUnitId,
     @required this.adSize,
+    this.listener,
     this.onBannerCreated,
   }) : super(key: key);
 
@@ -21,6 +24,8 @@ class AdmobBanner extends StatefulWidget {
 }
 
 class _AdmobBannerState extends State<AdmobBanner> {
+  AdmobBannerController _controller;
+
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -64,10 +69,10 @@ class _AdmobBannerState extends State<AdmobBanner> {
   }
 
   void _onPlatformViewCreated(int id) {
-    if (widget.onBannerCreated == null) {
-      return;
-    }
+    _controller = AdmobBannerController(id, widget.listener);
 
-    widget.onBannerCreated(AdmobBannerController(id));
+    if (widget.onBannerCreated != null) {
+      widget.onBannerCreated(_controller);
+    }
   }
 }
