@@ -1,31 +1,44 @@
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
+import 'admob_event_handler.dart';
 
-class AdmobInterstitial {
-  static Map<int, AdmobInterstitial> _allAds = <int, AdmobInterstitial>{};
+class AdmobInterstitial extends AdmobEventHandler {
   static const MethodChannel _channel =
       const MethodChannel('admob_flutter/interstitial');
 
   int id;
   final String adUnitId;
+  final void Function(AdmobAdEvent) listener;
 
-  AdmobInterstitial({@required this.adUnitId}) {
+  AdmobInterstitial({
+    @required this.adUnitId,
+    this.listener,
+  }) : super(listener) {
     id = hashCode;
-    _allAds[id] = this;
   }
 
   Future<bool> get isLoaded async {
-    final bool result = await _channel.invokeMethod('isLoaded', <String, dynamic>{
+    final bool result =
+        await _channel.invokeMethod('isLoaded', <String, dynamic>{
       'id': id,
     });
     return result;
   }
 
-  void loadAd() {
-    _channel.invokeMethod('load', <String, dynamic>{
+  void load() async {
+    await _channel.invokeMethod('load', <String, dynamic>{
       'id': id,
       'adUnitId': adUnitId,
     });
+
+    if (listener != null) {
+      MethodChannel adChannel = MethodChannel('admob_flutter/interstitial_$id');
+      adChannel.setMethodCallHandler(handleEvent);
+
+      _channel.invokeMethod('setListener', <String, dynamic>{
+        'id': id,
+      });
+    }
   }
 
   void show() async {
@@ -40,7 +53,5 @@ class AdmobInterstitial {
     await _channel.invokeMethod('dispose', <String, dynamic>{
       'id': id,
     });
-
-    _allAds.remove(id);
   }
 }

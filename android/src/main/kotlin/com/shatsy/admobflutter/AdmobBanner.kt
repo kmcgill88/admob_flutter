@@ -49,37 +49,7 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
 
   override fun onMethodCall(call: MethodCall, result: Result) {
     when(call.method) {
-      "setListener" -> {
-        adView.adListener = object: AdListener() {
-          override fun onAdLoaded() {
-            channel.invokeMethod("loaded", null)
-          }
-
-          override fun onAdFailedToLoad(p0: Int) {
-            channel.invokeMethod("failedToLoad", null)
-          }
-
-          override fun onAdClicked() {
-            channel.invokeMethod("clicked", null)
-          }
-
-          override fun onAdImpression() {
-            channel.invokeMethod("impression", null)
-          }
-
-          override fun onAdOpened() {
-            channel.invokeMethod("opened", null)
-          }
-
-          override fun onAdLeftApplication() {
-            channel.invokeMethod("leftApplication", null)
-          }
-
-          override fun onAdClosed() {
-            channel.invokeMethod("closed", null)
-          }
-        }
-      }
+      "setListener" -> adView.adListener = createAdListener(channel)
       "dispose" -> dispose()
       else -> result.notImplemented()
     }

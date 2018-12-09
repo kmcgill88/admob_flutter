@@ -14,6 +14,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   AdmobBannerSize bannerSize;
+  AdmobInterstitial interstitialAd;
 
   @override
   void initState() {
@@ -38,50 +39,95 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('AdmobFlutter'),
-          actions: <Widget>[
-            PopupMenuButton(
-              initialValue: bannerSize,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 16, left: 16),
-                  child: Text('Change banner size'),
+        ),
+        bottomNavigationBar: Container(
+          height: 50,
+          color: Colors.blueGrey,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: FlatButton(
+                  child: Text(
+                    'Show Interstitial',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {
+                          interstitialAd = AdmobInterstitial(
+                            adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+                            listener: (AdmobAdEvent event) {
+                              if (event == AdmobAdEvent.loaded) {
+                                interstitialAd.show();
+                              } else if (event == AdmobAdEvent.closed) {
+                                interstitialAd.dispose();
+                                interstitialAd = null;
+                              }
+                            },
+                          );
+
+                          interstitialAd.load();
+                        },
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 ),
               ),
-              offset: Offset(0, 20),
-              onSelected: (AdmobBannerSize newSize) {
-                setState(() {
-                  bannerSize = newSize;
-                });
-              },
-              itemBuilder: (BuildContext context) =>
-                  <PopupMenuEntry<AdmobBannerSize>>[
-                    PopupMenuItem(
-                      value: AdmobBannerSize.BANNER,
-                      child: Text('BANNER'),
+              Expanded(
+                child: FlatButton(
+                  child: Text(
+                    'Show Reward',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+              Expanded(
+                child: PopupMenuButton(
+                  initialValue: bannerSize,
+                  child: Center(
+                    child: Text(
+                      'Banner size',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.white),
                     ),
-                    PopupMenuItem(
-                      value: AdmobBannerSize.LARGE_BANNER,
-                      child: Text('LARGE_BANNER'),
-                    ),
-                    PopupMenuItem(
-                      value: AdmobBannerSize.MEDIUM_RECTANGLE,
-                      child: Text('MEDIUM_RECTANGLE'),
-                    ),
-                    PopupMenuItem(
-                      value: AdmobBannerSize.FULL_BANNER,
-                      child: Text('FULL_BANNER'),
-                    ),
-                    PopupMenuItem(
-                      value: AdmobBannerSize.LEADERBOARD,
-                      child: Text('LEADERBOARD'),
-                    ),
-                    PopupMenuItem(
-                      value: AdmobBannerSize.SMART_BANNER,
-                      child: Text('SMART_BANNER'),
-                    ),
-                  ],
-            ),
-          ],
+                  ),
+                  offset: Offset(0, 20),
+                  onSelected: (AdmobBannerSize newSize) {
+                    setState(() {
+                      bannerSize = newSize;
+                    });
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<AdmobBannerSize>>[
+                        PopupMenuItem(
+                          value: AdmobBannerSize.BANNER,
+                          child: Text('BANNER'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.LARGE_BANNER,
+                          child: Text('LARGE_BANNER'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          child: Text('MEDIUM_RECTANGLE'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.FULL_BANNER,
+                          child: Text('FULL_BANNER'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.LEADERBOARD,
+                          child: Text('LEADERBOARD'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.SMART_BANNER,
+                          child: Text('SMART_BANNER'),
+                        ),
+                      ],
+                ),
+              ),
+            ],
+          ),
         ),
         body: ListView.builder(
           padding: EdgeInsets.all(20.0),

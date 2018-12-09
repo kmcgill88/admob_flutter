@@ -1,23 +1,29 @@
 package com.shatsy.admobflutter
 
-import android.content.Context
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.PluginRegistry
 
-class AdmobInterstitial(private val context: Context): MethodChannel.MethodCallHandler {
+class AdmobInterstitial(private val registrar: PluginRegistry.Registrar): MethodChannel.MethodCallHandler {
   companion object {
     val allAds: MutableMap<Int, InterstitialAd> = mutableMapOf()
   }
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     when(call.method) {
+      "setListener" -> {
+        val id = call.argument<Int>("id")
+        val adChannel = MethodChannel(registrar.messenger(), "admob_flutter/interstitial_$id")
+
+        allAds[id]!!.adListener = createAdListener(adChannel)
+      }
       "load" -> {
         val id = call.argument<Int>("id")
         val adUnitId = call.argument<String>("adUnitId")
         val adRequest = AdRequest.Builder().build()
 
-        allAds[id!!] = InterstitialAd(context)
+        allAds[id!!] = InterstitialAd(registrar.context())
         allAds[id]!!.adUnitId = adUnitId
         allAds[id]?.loadAd(adRequest)
         result.success(null)
