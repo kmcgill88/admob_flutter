@@ -20,9 +20,9 @@ class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChanne
     when(call.method) {
       "setListener" -> {
         val id = call.argument<Int>("id")
+        if (allAds[id]!!.rewardedVideoAdListener != null) return
 
         adChannel = MethodChannel(registrar.messenger(), "admob_flutter/reward_$id")
-
         allAds[id]!!.rewardedVideoAdListener = this
       }
       "load" -> {

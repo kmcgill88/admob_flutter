@@ -7,6 +7,7 @@ class AdmobInterstitial extends AdmobEventHandler {
       const MethodChannel('admob_flutter/interstitial');
 
   int id;
+  MethodChannel _adChannel;
   final String adUnitId;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
 
@@ -15,6 +16,10 @@ class AdmobInterstitial extends AdmobEventHandler {
     this.listener,
   }) : super(listener) {
     id = hashCode;
+    if (listener != null) {
+      _adChannel = MethodChannel('admob_flutter/interstitial_$id');
+      _adChannel.setMethodCallHandler(handleEvent);
+    }
   }
 
   Future<bool> get isLoaded async {
@@ -32,9 +37,6 @@ class AdmobInterstitial extends AdmobEventHandler {
     });
 
     if (listener != null) {
-      MethodChannel adChannel = MethodChannel('admob_flutter/interstitial_$id');
-      adChannel.setMethodCallHandler(handleEvent);
-
       _channel.invokeMethod('setListener', <String, dynamic>{
         'id': id,
       });
