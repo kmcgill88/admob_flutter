@@ -11,33 +11,13 @@ import com.google.android.gms.ads.MobileAds
 
 fun createAdListener(channel: MethodChannel) : AdListener {
   return object: AdListener() {
-    override fun onAdLoaded() {
-      channel.invokeMethod("loaded", null)
-    }
-
-    override fun onAdFailedToLoad(p0: Int) {
-      channel.invokeMethod("failedToLoad", null)
-    }
-
-    override fun onAdClicked() {
-      channel.invokeMethod("clicked", null)
-    }
-
-    override fun onAdImpression() {
-      channel.invokeMethod("impression", null)
-    }
-
-    override fun onAdOpened() {
-      channel.invokeMethod("opened", null)
-    }
-
-    override fun onAdLeftApplication() {
-      channel.invokeMethod("leftApplication", null)
-    }
-
-    override fun onAdClosed() {
-      channel.invokeMethod("closed", null)
-    }
+    override fun onAdLoaded() = channel.invokeMethod("loaded", null)
+    override fun onAdFailedToLoad(p0: Int) = channel.invokeMethod("failedToLoad", null)
+    override fun onAdClicked() = channel.invokeMethod("clicked", null)
+    override fun onAdImpression() = channel.invokeMethod("impression", null)
+    override fun onAdOpened() = channel.invokeMethod("opened", null)
+    override fun onAdLeftApplication() = channel.invokeMethod("leftApplication", null)
+    override fun onAdClosed() = channel.invokeMethod("closed", null)
   }
 }
 
@@ -50,6 +30,9 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
 
       val interstitialChannel = MethodChannel(registrar.messenger(), "admob_flutter/interstitial")
       interstitialChannel.setMethodCallHandler(AdmobInterstitial(registrar))
+
+      val rewardChannel = MethodChannel(registrar.messenger(), "admob_flutter/reward")
+      rewardChannel.setMethodCallHandler(AdmobReward(registrar))
 
       registrar
         .platformViewRegistry()

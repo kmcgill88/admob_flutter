@@ -6,4 +6,7 @@ enum AdmobAdEvent {
   opened,
   leftApplication,
   closed,
+  completed,
+  rewarded,
+  started,
 }

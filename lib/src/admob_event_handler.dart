@@ -31,6 +31,15 @@ abstract class AdmobEventHandler {
       case 'closed':
         _listener(AdmobAdEvent.closed);
         break;
+      case 'completed':
+        _listener(AdmobAdEvent.completed);
+        break;
+      case 'rewarded':
+        _listener(AdmobAdEvent.rewarded);
+        break;
+      case 'started':
+        _listener(AdmobAdEvent.started);
+        break;
     }
 
     return null;
