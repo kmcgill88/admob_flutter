@@ -67,7 +67,7 @@ class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChanne
   override fun onRewardedVideoAdLoaded() = adChannel.invokeMethod("loaded", null)
   override fun onRewardedVideoAdOpened() = adChannel.invokeMethod("opened", null)
   override fun onRewardedVideoCompleted() = adChannel.invokeMethod("completed", null)
-  override fun onRewarded(p0: RewardItem?) = adChannel.invokeMethod("rewarded", null)
+  override fun onRewarded(reward: RewardItem?) = adChannel.invokeMethod("rewarded", hashMapOf("type" to (reward?.type ?: ""), "amount" to (reward?.amount ?: 0)))
   override fun onRewardedVideoStarted() = adChannel.invokeMethod("started", null)
-  override fun onRewardedVideoAdFailedToLoad(p0: Int) = adChannel.invokeMethod("failedToLoad", null)
+  override fun onRewardedVideoAdFailedToLoad(errorCode: Int) = adChannel.invokeMethod("failedToLoad", hashMapOf("errorCode" to errorCode))
 }

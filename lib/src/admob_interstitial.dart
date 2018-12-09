@@ -8,7 +8,7 @@ class AdmobInterstitial extends AdmobEventHandler {
 
   int id;
   final String adUnitId;
-  final void Function(AdmobAdEvent) listener;
+  final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
 
   AdmobInterstitial({
     @required this.adUnitId,

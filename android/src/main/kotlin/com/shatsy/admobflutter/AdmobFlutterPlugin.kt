@@ -12,7 +12,7 @@ import com.google.android.gms.ads.MobileAds
 fun createAdListener(channel: MethodChannel) : AdListener {
   return object: AdListener() {
     override fun onAdLoaded() = channel.invokeMethod("loaded", null)
-    override fun onAdFailedToLoad(p0: Int) = channel.invokeMethod("failedToLoad", null)
+    override fun onAdFailedToLoad(errorCode: Int) = channel.invokeMethod("failedToLoad", hashMapOf("errorCode" to errorCode))
     override fun onAdClicked() = channel.invokeMethod("clicked", null)
     override fun onAdImpression() = channel.invokeMethod("impression", null)
     override fun onAdOpened() = channel.invokeMethod("opened", null)

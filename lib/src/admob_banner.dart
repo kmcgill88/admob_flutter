@@ -8,7 +8,7 @@ import 'admob_events.dart';
 class AdmobBanner extends StatefulWidget {
   final String adUnitId;
   final AdmobBannerSize adSize;
-  final void Function(AdmobAdEvent) listener;
+  final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
 
   AdmobBanner({

@@ -13,6 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
   AdmobBannerSize bannerSize;
   AdmobInterstitial interstitialAd;
   AdmobReward rewardAd;
@@ -24,29 +25,66 @@ class _MyAppState extends State<MyApp> {
 
     interstitialAd = AdmobInterstitial(
       adUnitId: 'ca-app-pub-3940256099942544/1033173712',
-      listener: (AdmobAdEvent event) {
-        if (event == AdmobAdEvent.closed) {
-          interstitialAd.load();
-        }
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        if (event == AdmobAdEvent.closed) interstitialAd.load();
+        handleEvent(event, args, 'Interstitial');
       },
     );
 
     rewardAd = AdmobReward(
         adUnitId: 'ca-app-pub-3940256099942544/5224354917',
-        listener: (AdmobAdEvent event) {
-          if (event == AdmobAdEvent.closed) {
-            rewardAd.load();
-          }
+        listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+          if (event == AdmobAdEvent.closed) rewardAd.load();
+          handleEvent(event, args, 'Reward');
         });
 
     interstitialAd.load();
     rewardAd.load();
   }
 
-  void showSnackBar(BuildContext context, String content) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        showSnackBar('New Admob $adType Ad loaded!');
+        break;
+      case AdmobAdEvent.opened:
+        showSnackBar('Admob $adType Ad opened!');
+        break;
+      case AdmobAdEvent.closed:
+        showSnackBar('Admob $adType Ad closed!');
+        break;
+      case AdmobAdEvent.rewarded:
+        showDialog(
+          context: scaffoldState.currentContext,
+          builder: (BuildContext context) {
+            return WillPopScope(
+              child: AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text('Reward callback fired. Thanks Andrew!'),
+                    Text('Type: ${args['type']}'),
+                    Text('Amount: ${args['amount']}'),
+                  ],
+                ),
+              ),
+              onWillPop: () async {
+                scaffoldState.currentState.hideCurrentSnackBar();
+                return true;
+              },
+            );
+          },
+        );
+        break;
+      default:
+    }
+  }
+
+  void showSnackBar(String content) {
+    scaffoldState.currentState.showSnackBar(SnackBar(
       content: Text(content),
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 1500),
     ));
   }
 
@@ -58,6 +96,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blueGrey,
       ),
       home: Scaffold(
+        key: scaffoldState,
         appBar: AppBar(
           title: const Text('AdmobFlutter'),
         ),
@@ -80,7 +119,7 @@ class _MyAppState extends State<MyApp> {
                         if (await interstitialAd.isLoaded)
                           interstitialAd.show();
                         else
-                          showSnackBar(context, "Interstitial ad is still loading...");
+                          showSnackBar("Interstitial ad is still loading...");
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero),
@@ -96,7 +135,7 @@ class _MyAppState extends State<MyApp> {
                         if (await rewardAd.isLoaded) {
                           rewardAd.show();
                         } else
-                          showSnackBar(context, "Reward ad is still loading...");
+                          showSnackBar("Reward ad is still loading...");
                       },
                     ),
                   ),
@@ -162,19 +201,9 @@ class _MyAppState extends State<MyApp> {
                     child: AdmobBanner(
                       adUnitId: 'ca-app-pub-3940256099942544/6300978111',
                       adSize: bannerSize,
-                      listener: (AdmobAdEvent event) {
-                        switch (event) {
-                          case AdmobAdEvent.loaded:
-                            showSnackBar(context, "Admob Banner loaded!");
-                            break;
-                          case AdmobAdEvent.opened:
-                            showSnackBar(context, "Admob Banner opened!");
-                            break;
-                          case AdmobAdEvent.closed:
-                            showSnackBar(context, "Admob Banner closed!");
-                            break;
-                          default:
-                        }
+                      listener:
+                          (AdmobAdEvent event, Map<String, dynamic> args) {
+                        handleEvent(event, args, 'Banner');
                       },
                     ),
                   ),
@@ -195,5 +224,12 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    interstitialAd.dispose();
+    rewardAd.dispose();
+    super.dispose();
   }
 }
