@@ -1,6 +1,6 @@
 name: admob_flutter
 description: Admob plugin that shows banner ads using native platform views.
-version: 0.1.1
+version: 0.1.2
 author: Youssef Kababe <youssef.kbe@gmail.com>
 homepage: https://github.com/YoussefKababe/admob_flutter
 

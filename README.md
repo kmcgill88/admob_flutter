@@ -19,7 +19,7 @@ If you enjoy my work, please consider making a donation! Your donations will hel
 Add this to your pubspec.yml dependencies:
 
 ```yaml
-admob_flutter: "^0.1.1"
+admob_flutter: "^0.1.2"
 ```
 
 ## How to use
