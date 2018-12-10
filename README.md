@@ -6,7 +6,7 @@ A new Flutter plugin that uses native platform views to show Admob banner ads!
 
 This plugin also has support for Interstitial and Reward ads.
 
-This is an early version of the plugin, my primary goal was to overcome the banner ads positioning limitations by implementing a platform views solution, and keeping things simple and stupid because I'm still learning about many Flutter related stuff.I will actively work on adding missing features, improving, and refactoring the code in my free time.
+This is an early version of the plugin, my primary goal was to overcome the banner ads positioning limitations by implementing a platform views solution, and keeping things simple and stupid because I'm still learning about many Flutter related stuff. I will actively work on adding missing features, improving, and refactoring the code in my free time.
 
 **Currently working on Android only, but iOS support will be available so soon.**
 
@@ -19,7 +19,7 @@ If you enjoy my work, please consider making a donation! Your donations will hel
 Add this to your pubspec.yml dependencies:
 
 ```yaml
-admob_flutter: "^0.1.0"
+admob_flutter: "^0.1.1"
 ```
 
 ## How to use
@@ -135,7 +135,7 @@ interstitialAd.dispose();
 Same as banner ads, you can attach a listener to interstitials too. For example if you wish to:
 - Show the interstitial as soon as it is loaded
 - Load a new ad and show it as soon as the old one is closed
-- Get your users stuck in and interstitial ads loop to maximize revenue
+- Get your users stuck in an interstitial ads loop to maximize revenue
 - Get your Admob account banned and lose all your earnings
 
 You can do something like this (Don't do it!):
