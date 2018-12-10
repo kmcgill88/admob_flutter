@@ -1,4 +1,7 @@
 # admob_flutter
+[![version](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square)](https://github.com/Solido/awesome-flutter/)
+[![version](https://img.shields.io/pub/v/admob_flutter.svg?style=flat-square)](https://pub.dartlang.org/packages/admob_flutter)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://paypal.me/YoussefKababe)
 
 ![Demo](https://i.imgur.com/zJC41es.gif)
 
@@ -12,7 +15,7 @@ This is an early version of the plugin, my primary goal was to overcome the bann
 
 If you enjoy my work, please consider making a donation! Your donations will help me have more time to make more helpful plugins and maintain them.
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/YoussefKababe)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://paypal.me/YoussefKababe)
 
 ## Installation
 
