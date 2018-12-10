@@ -1,3 +1,3 @@
-## 0.0.1
+## [0.1.0] - Dec 10
 
-* TODO: Describe initial release.
+* Release first version
