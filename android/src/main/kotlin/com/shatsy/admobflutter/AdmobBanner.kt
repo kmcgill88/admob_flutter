@@ -23,7 +23,14 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
     adView.adSize = getSize(args?.get("adSize") as HashMap<*, *>)
     adView.adUnitId = args?.get("adUnitId") as String?
 
-    val adRequest = AdRequest.Builder().build()
+    val builder = AdRequest.Builder()
+
+    if(args?.containsKey("testDeviceId")){
+      val testDeviceId = args?.get("testDeviceId") as String
+      builder.addTestDevice(testDeviceId)
+    }
+
+    val adRequest = builder.build()
     adView.loadAd(adRequest)
   }
 

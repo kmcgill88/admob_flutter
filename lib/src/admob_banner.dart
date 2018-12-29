@@ -8,6 +8,7 @@ import 'admob_events.dart';
 class AdmobBanner extends StatefulWidget {
   final String adUnitId;
   final AdmobBannerSize adSize;
+  final String testDeviceId;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
 
@@ -15,6 +16,7 @@ class AdmobBanner extends StatefulWidget {
     Key key,
     @required this.adUnitId,
     @required this.adSize,
+    this.testDeviceId,
     this.listener,
     this.onBannerCreated,
   }) : super(key: key);
@@ -28,6 +30,15 @@ class _AdmobBannerState extends State<AdmobBanner> {
 
   @override
   Widget build(BuildContext context) {
+    var params =  <String, dynamic>{
+      "adUnitId": widget.adUnitId,
+      "adSize": widget.adSize.toMap,
+    };
+
+    if (widget.testDeviceId != null) {
+      params.putIfAbsent('testDeviceId', () => widget.testDeviceId);
+    }
+
     if (defaultTargetPlatform == TargetPlatform.android) {
       return Container(
         width: widget.adSize.width >= 0 ? widget.adSize.width.toDouble() : double.infinity,
@@ -35,10 +46,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
         child: AndroidView(
           key: UniqueKey(),
           viewType: 'admob_flutter/banner',
-          creationParams: <String, dynamic>{
-            "adUnitId": widget.adUnitId,
-            "adSize": widget.adSize.toMap,
-          },
+          creationParams: params,
           creationParamsCodec: StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,
         ),
@@ -50,10 +58,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
         height: widget.adSize.height.toDouble(),
         child: UiKitView(
           viewType: 'admob_flutter/banner',
-          creationParams: <String, dynamic>{
-            "adUnitId": widget.adUnitId,
-            "adSize": widget.adSize.toMap,
-          },
+          creationParams: params,
           creationParamsCodec: StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,
         ),
