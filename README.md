@@ -1,3 +1,7 @@
+# Announcement: I'm looking for a maintainer
+
+I'm really sorry to announce this, but my schedules have been too tight for me the last months that I can't find good time to maintain this project. I'm looking for a possible maintainer to transfer this project to, someone who is sure to perfectly handle it and keep it updated. Please drop me a message on [youssef.kbe@gmail.com](mailto:youssef.kbe@gmail.com).
+
 # admob_flutter
 [![version](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square)](https://github.com/Solido/awesome-flutter/)
 [![version](https://img.shields.io/pub/v/admob_flutter.svg?style=flat-square)](https://pub.dartlang.org/packages/admob_flutter)
