@@ -31,6 +31,7 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
     registrar.addMethodCallDelegate(instance, channel: defaultChannel)
 
     let interstitialChannel = FlutterMethodChannel(name: "admob_flutter/interstitial", binaryMessenger: registrar.messenger())
+//    registrar.addMethodCallDelegate(AdmobIntersitial(), channel: interstitialChannel)
     registrar.addMethodCallDelegate(instance, channel: interstitialChannel)
 
     let rewardChannel = FlutterMethodChannel(name: "admob_flutter/reward", binaryMessenger: registrar.messenger())

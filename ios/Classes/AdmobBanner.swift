@@ -129,7 +129,7 @@ extension AdmobBanner : GADBannerViewDelegate {
         channel.invokeMethod("opened", arguments: nil)
     }
     
-    // channel.invokeMethod("impression", null)
+    // TODO: not sure this exists on iOS. channel.invokeMethod("impression", null)
     
     func adViewWillLeaveApplication(_ bannerView: GADBannerView) {
         channel.invokeMethod("leftApplication", arguments: nil)
