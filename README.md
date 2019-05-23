@@ -21,9 +21,11 @@ This is an early version of the plugin, my primary goal was to overcome the bann
 Add this to your pubspec.yml dependencies:
 
 ```yaml
-admob_flutter: "^0.1.2"
+admob_flutter: "^0.2.0"
 ```
-
+## Suport
+- AndroidX
+- FlutterSdk >=2.1.0 < 3.0.0
 ## How to use
 
 ### Update your AndroidManifest.xml
