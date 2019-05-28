@@ -30,8 +30,6 @@ class AdmobBannerFactory : NSObject, FlutterPlatformViewFactory {
     }
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
-        let myargs = args
-        print(myargs ?? "NO ARGS!")
         return AdmobBanner(
             frame: frame,
             viewId: viewId,

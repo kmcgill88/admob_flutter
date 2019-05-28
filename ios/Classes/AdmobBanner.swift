@@ -54,14 +54,12 @@ class AdmobBanner : NSObject, FlutterPlatformView {
         if adView == nil {
             adView = GADBannerView()
             adView!.rootViewController = UIApplication.shared.keyWindow?.rootViewController
-            adView!.delegate = self
             adView!.frame = self.frame.width == 0 ? CGRect(x: 0, y: 0, width: 1, height: 1) : self.frame
             adView!.adUnitID = self.args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/6300978111"
-            adView!.delegate = self
             channel.setMethodCallHandler { [weak self] (flutterMethodCall: FlutterMethodCall, flutterResult: FlutterResult) in
                 switch flutterMethodCall.method {
                 case "setListener":
-//                    self?.adView?.delegate = self
+                    self?.adView?.delegate = self
                     break
                 case "dispose":
                     self?.dispose()
@@ -79,9 +77,7 @@ class AdmobBanner : NSObject, FlutterPlatformView {
     fileprivate func requestAd() {
         if let ad = getBannerAdView() {
             let request = GADRequest()
-//            if debug {
-                request.testDevices = [kGADSimulatorID]
-//            }
+            request.testDevices = [kGADSimulatorID]
             ad.load(request)
         }
     }
@@ -129,7 +125,8 @@ extension AdmobBanner : GADBannerViewDelegate {
         channel.invokeMethod("opened", arguments: nil)
     }
     
-    // TODO: not sure this exists on iOS. channel.invokeMethod("impression", null)
+    // TODO: not sure this exists on iOS.
+    // channel.invokeMethod("impression", null)
     
     func adViewWillLeaveApplication(_ bannerView: GADBannerView) {
         channel.invokeMethod("leftApplication", arguments: nil)

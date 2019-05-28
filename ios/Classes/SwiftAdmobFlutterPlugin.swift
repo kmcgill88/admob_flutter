@@ -19,7 +19,6 @@
  THE SOFTWARE.
  */
 
-import Flutter
 import UIKit
 import GoogleMobileAds
 
@@ -27,15 +26,16 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
     
   public static func register(with registrar: FlutterPluginRegistrar) {
     let instance = SwiftAdmobFlutterPlugin()
+    
     let defaultChannel = FlutterMethodChannel(name: "admob_flutter", binaryMessenger: registrar.messenger())
     registrar.addMethodCallDelegate(instance, channel: defaultChannel)
 
-    let interstitialChannel = FlutterMethodChannel(name: "admob_flutter/interstitial", binaryMessenger: registrar.messenger())
+    
+//    let interstitialChannel = FlutterMethodChannel(name: "admob_flutter/interstitial", binaryMessenger: registrar.messenger())
 //    registrar.addMethodCallDelegate(AdmobIntersitial(), channel: interstitialChannel)
-    registrar.addMethodCallDelegate(instance, channel: interstitialChannel)
-
-    let rewardChannel = FlutterMethodChannel(name: "admob_flutter/reward", binaryMessenger: registrar.messenger())
-    registrar.addMethodCallDelegate(instance, channel: rewardChannel)
+    
+//    let rewardChannel = FlutterMethodChannel(name: "admob_flutter/reward", binaryMessenger: registrar.messenger())
+//    registrar.addMethodCallDelegate(instance, channel: rewardChannel)
 
     registrar.register(
         AdmobBannerFactory(messeneger: registrar.messenger()),
@@ -47,16 +47,14 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "initialize":
         GADMobileAds.sharedInstance().start { (initializationStatus: GADInitializationStatus) in
-            print("initializationStatus:")
-            print(initializationStatus)
+            print("initializationStatus: \(initializationStatus)")
         }
         break
     case "getPlatformVersion":
         result("iOS " + UIDevice.current.systemVersion)
         break
     default:
-        result("success")
-//        result(FlutterMethodNotImplemented)
+        result(FlutterMethodNotImplemented)
     }
   }
 }
