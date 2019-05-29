@@ -3,14 +3,14 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'admob_flutter'
-  s.version          = '0.2.0'
+  s.version          = '0.3.0'
   s.summary          = 'Admob plugin that shows banner ads using native platform views.'
   s.description      = <<-DESC
 Admob plugin that shows banner ads using native platform views.
                        DESC
   s.homepage         = 'https://github.com/YoussefKababe/admob_flutter'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'admob_flutter' => 'email@admobflutter.fake' }
+  s.author           = { 'Kevin McGill' => 'kevin@mcgilldevtech.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
