@@ -16,18 +16,19 @@ This is an early version of the plugin, my primary goal was to overcome the bann
 
 **Currently working on Android only, but iOS support will be available so soon.**
 
-## Installation
+# Installation
 
 Add this to your pubspec.yml dependencies:
 
 ```yaml
-admob_flutter: "^0.2.0"
+admob_flutter: "^0.3.0"
 ```
-## Suport
-- AndroidX
+### Supported Platforms
+- `0.3.0` >= iOS
+- `0.2.0` >= AndroidX
 - FlutterSdk >=2.1.0 < 3.0.0
-## How to use
 
+## Android
 ### Update your AndroidManifest.xml
 
 Add your AdMob App ID to your app's AndroidManifest.xml file by adding the <meta-data> tag shown below. You can find your App ID in the AdMob UI. For android:value insert your own AdMob App ID in quotes, as shown below.
@@ -46,7 +47,14 @@ ca-app-pub-3940256099942544~3347511713
   </application>
 </manifest>
 ```
+## iOS
+Update your `Info.plist` per [Firebase instructions](https://developers.google.com/admob/ios/quick-start#update_your_infoplist).
+```xml
+<key>GADApplicationIdentifier</key>
+<string>ca-app-pub-3940256099942544~1458002511</string>
+```
 
+# How to use
 ### Initialize the plugin
 
 First thing to do before attempting to show any ads is to initialize the plugin. You can do this in the earliest starting point of your app, your `main` function:
@@ -55,7 +63,7 @@ First thing to do before attempting to show any ads is to initialize the plugin.
 import 'package:admob_flutter/admob_flutter.dart';
 
 void main() {
-  Admob.initialize('ca-app-pub-3940256099942544~3347511713');
+  Admob.initialize(getAppId());
   runApp(MyApp());
 }
 ```
@@ -66,7 +74,7 @@ This plugin uses Native Platform Views to show Admob banner ads thus, same as an
 
 ```dart
 AdmobBanner(
-  adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+  adUnitId: getBannerAdUnitId(),
   adSize: AdmobBannerSize.BANNER,
 )
 ```
@@ -88,7 +96,7 @@ You can attach a listener to your ads in order to customize their behavior like 
 
 ```dart
 AdmobBanner(
-  adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+  adUnitId: getBannerAdUnitId(),
   adSize: AdmobBannerSize.BANNER,
   listener: (AdmobAdEvent event, Map<String, dynamic> args) {
     switch (event) {
@@ -117,7 +125,7 @@ AdmobBanner(
 ```dart
 // First, create an interstitial ad
 AdmobInterstitial interstitialAd = AdmobInterstitial(
-  adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+  adUnitId: getInterstitialAdUnitId(),
 );
 
 // Interstitials must be loaded before shown.
@@ -148,7 +156,7 @@ You can do something like this (Don't do it!):
 AdmobInterstitial interstitialAd;
 
 interstitialAd = AdmobInterstitial(
-  adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+  adUnitId: getInterstitialAdUnitId(),
   listener: (AdmobAdEvent event, Map<String, dynamic> args) {
     if (event == AdmobAdEvent.loaded) interstitialAd.show();
     if (event == AdmobAdEvent.closed) interstitialAd.load();
@@ -165,7 +173,7 @@ interstitialAd = AdmobInterstitial(
 ```dart
 // First, create a reward ad
 AdmobReward rewardAd = AdmobReward(
-  adUnitId: 'ca-app-pub-3940256099942544/5224354917',
+  adUnitId: getRewardBasedVideoAdUnitId(),
 );
 
 // Reward ads must be loaded before shown.
@@ -188,7 +196,7 @@ Listening to reward ads events works the same as with banners and interstitials,
 
 ```dart
 AdmobReward rewardAd = AdmobReward(
-  adUnitId: 'ca-app-pub-3940256099942544/5224354917',
+  adUnitId: getRewardBasedVideoAdUnitId(),
   listener: (AdmobAdEvent event, Map<String, dynamic> args) {
     if (event == AdmobAdEvent.rewarded) {
       print('User was rewarded!');
@@ -200,9 +208,7 @@ AdmobReward rewardAd = AdmobReward(
 ```
 
 ### Showing Native Ads
-
 **Coming soon!**
 
 ### Using targeting info
-
 **Coming soon!**
