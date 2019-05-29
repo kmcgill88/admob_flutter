@@ -16,6 +16,7 @@
  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import Flutter
 import Foundation
 import GoogleMobileAds
 
@@ -47,7 +48,7 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "setListener":
             let channel = FlutterMethodChannel(
-                name: "admob_flutter/interstitial_\(id)",
+                name: "admob_flutter/reward_\(id)",
                 binaryMessenger: pluginRegistrar!.messenger()
             )
             delegates[id] = AdmobRewardPluginDelegate(channel: channel)
@@ -55,12 +56,12 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
             rewardVideo.delegate = delegates[id]
             break
         case "load":
-            allIds[id] = getRewardBasedVideoAd(id: id)
             loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId)
             result(nil)
             break
         case "isLoaded":
-            result(getRewardBasedVideoAd(id: id).isReady)
+            let isReady = getRewardBasedVideoAd(id: id).isReady
+            result(isReady)
             break
         case "show":
             let rewardVideo = getRewardBasedVideoAd(id: id)

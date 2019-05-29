@@ -16,6 +16,7 @@
  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import Flutter
 import Foundation
 import GoogleMobileAds
 
@@ -56,7 +57,8 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
             result(nil)
             break
         case "isLoaded":
-            result(getInterstitialAd(id: id, interstantialAdUnitId: adUnitId).isReady)
+            let interstitial = getInterstitialAd(id: id, interstantialAdUnitId: adUnitId)
+            result(interstitial.isReady && !interstitial.hasBeenUsed)
             break
         case "show":
             let interstitial = getInterstitialAd(id: id, interstantialAdUnitId: adUnitId)
@@ -83,7 +85,12 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
     }
     
     private func getInterstitialAd(id: Int, interstantialAdUnitId: String) -> GADInterstitial {
-        if allIds[id] == nil {
+        if let interstantialAd = allIds[id] {
+            if (interstantialAd.hasBeenUsed) {
+                let interstantialAd = GADInterstitial(adUnitID: interstantialAdUnitId)
+                allIds[id] = interstantialAd
+            }
+        } else {
             let interstantialAd = GADInterstitial(adUnitID: interstantialAdUnitId)
             allIds[id] = interstantialAd
         }
