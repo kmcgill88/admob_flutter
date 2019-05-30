@@ -3,19 +3,22 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'admob_flutter'
-  s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
+  s.version          = '0.3.0'
+  s.summary          = 'Admob plugin that shows banner ads using native platform views.'
   s.description      = <<-DESC
-A new flutter plugin project.
+Admob plugin that shows banner ads using native platform views.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/YoussefKababe/admob_flutter'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'Kevin McGill' => 'kevin@mcgilldevtech.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
+  s.dependency 'Firebase/Core'
+  s.dependency 'Firebase/AdMob'
 
   s.ios.deployment_target = '8.0'
+  s.static_framework = true
 end
 
