@@ -51,6 +51,11 @@ Update your `Info.plist` per [Firebase instructions](https://developers.google.c
 <key>GADApplicationIdentifier</key>
 <string>ca-app-pub-3940256099942544~1458002511</string>
 ```
+and add
+```xml
+<key>io.flutter.embedded_views_preview</key>
+<true/>
+```
 
 # How to use
 ### Initialize the plugin
