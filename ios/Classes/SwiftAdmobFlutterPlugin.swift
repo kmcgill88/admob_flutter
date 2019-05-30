@@ -36,12 +36,7 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
     case "initialize":
-        GADMobileAds.sharedInstance().start { (initializationStatus: GADInitializationStatus) in
-            print("initializationStatus: \(initializationStatus)")
-        }
-        break
-    case "getPlatformVersion":
-        result("iOS " + UIDevice.current.systemVersion)
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
         break
     default:
         result(FlutterMethodNotImplemented)
