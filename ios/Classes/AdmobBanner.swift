@@ -111,7 +111,10 @@ extension AdmobBanner : GADBannerViewDelegate {
     }
     
     func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
-         channel.invokeMethod("failedToLoad", arguments: error)
+        channel.invokeMethod("failedToLoad", arguments: [
+            "errorCode": error.code,
+            "error": error.localizedDescription
+        ])
     }
     
     /// Tells the delegate that a full screen view will be presented in response to the user clicking on
