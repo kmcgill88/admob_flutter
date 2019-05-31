@@ -19,7 +19,7 @@ This is an early version of the plugin, my primary goal was to overcome the bann
 Add this to your pubspec.yml dependencies:
 
 ```yaml
-admob_flutter: "^0.3.0"
+admob_flutter: "^0.3.1"
 ```
 ### Supported Platforms
 - `0.3.0` >= iOS

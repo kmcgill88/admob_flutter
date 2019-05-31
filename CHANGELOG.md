@@ -1,3 +1,6 @@
+## [0.3.1] - 2019/05/31
+iOS Banner Crash fix
+
 ## [0.3.0] - 2019/05/28
 Add iOS support!
 
