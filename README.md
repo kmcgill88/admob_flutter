@@ -59,7 +59,6 @@ import 'package:admob_flutter/admob_flutter.dart';
 - Interstitial Ads
 - Reward Ads
 - Native Ads (Coming soon)
-- Using targeting info (Coming soon)
 
 ### View the rest documentation on the [repository Wiki](https://github.com/YoussefKababe/admob_flutter/wiki)! 
 
