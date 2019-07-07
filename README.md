@@ -54,7 +54,14 @@ import 'package:admob_flutter/admob_flutter.dart';
 - `0.2.0` >= AndroidX
 - FlutterSdk >=2.1.0 < 3.0.0
 
-### View more documentation on the [repository Wiki](https://github.com/YoussefKababe/admob_flutter/wiki)! 
+### Supported Admob features
+- Banner Ads
+- Interstitial Ads
+- Reward Ads
+- Native Ads (Coming soon)
+- Using targeting info (Coming soon)
+
+### View the rest documentation on the [repository Wiki](https://github.com/YoussefKababe/admob_flutter/wiki)! 
 
 # Pull Requests
 
