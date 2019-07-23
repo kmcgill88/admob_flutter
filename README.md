@@ -60,7 +60,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 - Reward Ads
 - Native Ads (Coming soon)
 
-### View the rest documentation on the [repository Wiki](https://github.com/YoussefKababe/admob_flutter/wiki)! 
+### View the rest of the documentation on the [repository Wiki](https://github.com/YoussefKababe/admob_flutter/wiki)! 
 
 # Pull Requests
 
