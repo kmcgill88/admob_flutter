@@ -56,6 +56,9 @@ class _MyAppState extends State<MyApp> {
       case AdmobAdEvent.closed:
         showSnackBar('Admob $adType Ad closed!');
         break;
+      case AdmobAdEvent.failedToLoad:
+        showSnackBar('Admob $adType failed to load. :(');
+        break;
       case AdmobAdEvent.rewarded:
         showDialog(
           context: scaffoldState.currentContext,
