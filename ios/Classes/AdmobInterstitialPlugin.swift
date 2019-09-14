@@ -131,7 +131,10 @@ class AdmobIntersitialPluginDelegate: NSObject, GADInterstitialDelegate {
     }
 
     func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
-        channel.invokeMethod("failedToLoad", arguments: ["errorCode": error])
+        channel.invokeMethod("failedToLoad", arguments:  [
+            "errorCode": error.code,
+            "error": error.localizedDescription
+        ])
     }
     
     func interstitialDidFail(toPresentScreen ad: GADInterstitial) {
