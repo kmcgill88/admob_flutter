@@ -1,6 +1,7 @@
 name: admob_flutter_example
 description: Demonstrates how to use the admob_flutter plugin.
 publish_to: 'none'
+version: 1.0.0+1
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
