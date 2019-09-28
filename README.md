@@ -26,7 +26,7 @@ Add this to your package's pubspec.yaml file:
 
 ```dart
 dependencies:
-  admob_flutter: "^0.3.1"
+  admob_flutter: "^0.3.3"
 
 ```
 
