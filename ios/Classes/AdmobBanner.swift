@@ -73,7 +73,6 @@ class AdmobBanner : NSObject, FlutterPlatformView {
     fileprivate func requestAd() {
         if let ad = getBannerAdView() {
             let request = GADRequest()
-            GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [kGADSimulatorID as! String]
             ad.load(request)
         }
     }
