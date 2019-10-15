@@ -36,7 +36,12 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
     case "initialize":
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        // https://developers.google.com/admob/ios/test-ads#enable_test_devices
+        // **iOS simulators are automatically configured as test devices.**
+        // GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = ["You're physical iDevice Id"]
+        GADMobileAds.sharedInstance().start { (status: GADInitializationStatus) in
+            print("iOS Admob status: \(status.adapterStatusesByClassName)")
+        }
         break
     default:
         result(FlutterMethodNotImplemented)
