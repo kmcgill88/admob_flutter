@@ -80,7 +80,7 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
     private func loadInterstantialAd(id: Int, interstantialAdUnitId: String) {
         let interstantial = getInterstitialAd(id: id, interstantialAdUnitId: interstantialAdUnitId)
         let request = GADRequest()
-        request.testDevices = [kGADSimulatorID]
+        GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [kGADSimulatorID as! String]
         interstantial.load(request)
     }
     
@@ -131,7 +131,10 @@ class AdmobIntersitialPluginDelegate: NSObject, GADInterstitialDelegate {
     }
 
     func interstitial(_ ad: GADInterstitial, didFailToReceiveAdWithError error: GADRequestError) {
-        channel.invokeMethod("failedToLoad", arguments: ["errorCode": error])
+        channel.invokeMethod("failedToLoad", arguments:  [
+            "errorCode": error.code,
+            "error": error.localizedDescription
+        ])
     }
     
     func interstitialDidFail(toPresentScreen ad: GADInterstitial) {
