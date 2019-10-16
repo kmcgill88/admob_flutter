@@ -10,8 +10,6 @@ trigger_map:
 workflows:
   primary:
     steps:
-      - activate-ssh-key@4.0.3:
-          run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
       - git-clone@4.0.17: {}
       - cache-pull@2.1.1: {}
       - flutter-installer: {}
@@ -21,6 +19,7 @@ workflows:
       - cocoapods-install@1.9.0: {}
       - xcode-build-for-simulator@0.10.0:
           inputs:
+            - scheme: Runner
             - simulator_device: iPhone 11
       - cache-push@2.2.1: {}
     meta:
