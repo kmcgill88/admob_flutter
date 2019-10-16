@@ -23,6 +23,9 @@ workflows:
       - xcode-build-for-simulator@0.10.0:
           inputs:
             - simulator_device: iPhone 11
+    meta:
+      bitrise.io:
+        stack: osx-xcode-11.1.x
 app:
   envs:
     - opts:
