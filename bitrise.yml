@@ -19,10 +19,13 @@ workflows:
           inputs:
             - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
       - deploy-to-bitrise-io@1.7.1: {}
-      - cache-push@2.2.0: {}
+      - cocoapods-install@1.9.0:
+          inputs:
+            - install_cocoapods_version: 1.8.3
       - xcode-build-for-simulator@0.10.0:
           inputs:
             - simulator_device: iPhone 11
+      - cache-push@2.2.0: {}
     meta:
       bitrise.io:
         stack: osx-xcode-11.1.x
