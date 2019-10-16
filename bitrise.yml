@@ -3,8 +3,6 @@ format_version: '8'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: flutter
 trigger_map:
-  - push_branch: "*"
-    workflow: primary
   - pull_request_source_branch: "*"
     workflow: primary
 workflows:
@@ -13,10 +11,18 @@ workflows:
       - git-clone@4.0.17: {}
       - cache-pull@2.1.1: {}
       - flutter-installer: {}
-      - flutter-analyze@0.1.1:
+      - script@1.1.5:
           inputs:
-            - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
-      - cocoapods-install@1.9.0: {}
+            - content: |-
+                #!/usr/bin/env bash
+                # fail if any commands fails
+                set -e
+                # debug log
+                set -x
+
+                flutter packages get
+                flutter analyze
+                pod install --project-directory=example/ios
       - xcode-build-for-simulator@0.10.0:
           inputs:
             - scheme: Runner
