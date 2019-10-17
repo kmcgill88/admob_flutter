@@ -6,7 +6,7 @@ import 'admob_event_handler.dart';
 
 class AdmobInterstitial extends AdmobEventHandler {
   static const MethodChannel _channel =
-      const MethodChannel('admob_flutter/interstitial');
+      MethodChannel('admob_flutter/interstitial');
 
   int id;
   MethodChannel _adChannel;
@@ -39,7 +39,7 @@ class AdmobInterstitial extends AdmobEventHandler {
     });
 
     if (listener != null) {
-      _channel.invokeMethod('setListener', <String, dynamic>{
+      await _channel.invokeMethod('setListener', <String, dynamic>{
         'id': id,
       });
     }
@@ -47,7 +47,7 @@ class AdmobInterstitial extends AdmobEventHandler {
 
   void show() async {
     if (await isLoaded == true) {
-      _channel.invokeMethod('show', <String, dynamic>{
+      await _channel.invokeMethod('show', <String, dynamic>{
         'id': id,
       });
     }

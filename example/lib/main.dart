@@ -121,10 +121,11 @@ class _MyAppState extends State<MyApp> {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async {
-                        if (await interstitialAd.isLoaded)
+                        if (await interstitialAd.isLoaded) {
                           interstitialAd.show();
-                        else
+                        } else {
                           showSnackBar("Interstitial ad is still loading...");
+                        }
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero),
@@ -139,8 +140,9 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         if (await rewardAd.isLoaded) {
                           rewardAd.show();
-                        } else
+                        } else {
                           showSnackBar("Reward ad is still loading...");
+                        }
                       },
                     ),
                   ),

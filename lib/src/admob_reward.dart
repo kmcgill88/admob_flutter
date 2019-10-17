@@ -6,7 +6,7 @@ import 'admob_event_handler.dart';
 
 class AdmobReward extends AdmobEventHandler {
   static const MethodChannel _channel =
-      const MethodChannel('admob_flutter/reward');
+      MethodChannel('admob_flutter/reward');
 
   int id;
   MethodChannel _adChannel;
@@ -39,7 +39,7 @@ class AdmobReward extends AdmobEventHandler {
     });
 
     if (listener != null) {
-      _channel.invokeMethod('setListener', <String, dynamic>{
+      await _channel.invokeMethod('setListener', <String, dynamic>{
         'id': id,
       });
     }
@@ -47,7 +47,7 @@ class AdmobReward extends AdmobEventHandler {
 
   void show() async {
     if (await isLoaded == true) {
-      _channel.invokeMethod('show', <String, dynamic>{
+      await _channel.invokeMethod('show', <String, dynamic>{
         'id': id,
       });
     }
