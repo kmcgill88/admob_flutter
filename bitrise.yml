@@ -11,6 +11,10 @@ workflows:
       - git-clone@4.0.17: {}
       - cache-pull@2.1.1: {}
       - flutter-installer: {}
+      - flutter@0.0.7:
+          inputs:
+            - commands: packages get|analyze
+            - version: 1.9.1+hotfix.4
       - script@1.1.5:
           inputs:
             - content: |-
@@ -20,13 +24,8 @@ workflows:
                 # debug log
                 set -x
 
-                flutter packages get
-                flutter analyze
-                pod install --project-directory=example/ios
-      - xcode-build-for-simulator@0.10.0:
-          inputs:
-            - scheme: Runner
-            - simulator_device: iPhone 11
+                cd example
+                flutter build ios --debug --no-codesign
       - cache-push@2.2.1: {}
     meta:
       bitrise.io:
