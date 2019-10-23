@@ -2,6 +2,7 @@ package com.shatsy.admobflutter
 
 import android.content.Context
 import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -44,6 +45,7 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
     when(call.method) {
       "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
       "initialize" -> MobileAds.initialize(context, call.arguments())
+      "addTestDevice" -> AdRequest.Builder().addTestDevice(call.arguments()).build()
       else -> result.notImplemented()
     }
   }

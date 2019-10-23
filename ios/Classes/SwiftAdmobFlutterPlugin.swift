@@ -43,6 +43,8 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
             print("iOS Admob status: \(status.adapterStatusesByClassName)")
         }
         break
+    case "addTestDevice":
+    	GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [call.arguments()]
     default:
         result(FlutterMethodNotImplemented)
     }

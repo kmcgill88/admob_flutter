@@ -5,4 +5,9 @@ class Admob {
     MethodChannel _channel = const MethodChannel('admob_flutter');
     _channel.invokeMethod('initialize', appId);
   }
+
+  Admob.addTestDevice(String deviceId) {
+    MethodChannel _channel = const MethodChannel('admob_flutter');
+    _channel.invokeMethod('addTestDevice', deviceId);
+  }
 }
