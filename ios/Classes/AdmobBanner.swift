@@ -64,6 +64,8 @@ class AdmobBanner : NSObject, FlutterPlatformView {
                     flutterResult(FlutterMethodNotImplemented)
                 }
             }
+            let testDeviceIds = self.args["testDeviceIds"] as? [String] ?? []
+            GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = testDeviceIds
             requestAd()
         }
         
