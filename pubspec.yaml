@@ -8,7 +8,7 @@ homepage: https://github.com/kmcgill88/admob_flutter
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
-  flutter: ^1.9.1
+  flutter: ">=1.0.0 <2.0.0"
 
 dependencies:
   flutter:

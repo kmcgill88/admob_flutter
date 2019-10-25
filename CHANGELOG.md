@@ -1,7 +1,7 @@
-## [0.3.4] - 2019/10/15
-Pin iOS dependencies
-Add bitrise build
-Add analysis_options.yaml
+## [0.3.4] - 2019/10/25
+- Pin iOS dependencies
+- Add bitrise build
+- Add analysis_options.yaml
 
 ## [0.3.3] - 2019/09/25
 iOS 13.0 fixes
