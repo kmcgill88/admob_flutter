@@ -3,6 +3,8 @@ format_version: '8'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: flutter
 trigger_map:
+  - push_branch: master
+    workflow: primary
   - pull_request_source_branch: "*"
     workflow: primary
 workflows:
@@ -26,6 +28,7 @@ workflows:
 
                 cd example
                 flutter build ios --debug --no-codesign
+                flutter build apk --debug
       - cache-push@2.2.1: {}
     meta:
       bitrise.io:
