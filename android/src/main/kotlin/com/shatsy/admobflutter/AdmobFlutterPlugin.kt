@@ -44,7 +44,6 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
     when(call.method) {
       "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
       "initialize" -> MobileAds.initialize(context, call.arguments())
-      "addTestDevice" -> AdRequest.Builder().addTestDevice(call.arguments()).build()
       else -> result.notImplemented()
     }
   }
