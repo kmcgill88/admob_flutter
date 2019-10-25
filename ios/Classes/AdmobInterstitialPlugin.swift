@@ -43,7 +43,7 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
         }
         let id = args["id"] as? Int ?? 0
         let adUnitId = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/1033173712"
-        let testDeviceIds = self.args["testDeviceIds"] as? [String] ?? []
+        let testDeviceIds = args["testDeviceIds"] as? [String] ?? []
         
         GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = testDeviceIds
 
