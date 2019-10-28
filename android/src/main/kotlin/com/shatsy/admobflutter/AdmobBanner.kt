@@ -2,7 +2,6 @@ package com.shatsy.admobflutter
 
 import android.content.Context
 import android.view.View
-import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -23,8 +22,31 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
     adView.adSize = getSize(args?.get("adSize") as HashMap<*, *>)
     adView.adUnitId = args?.get("adUnitId") as String?
 
-    val adRequest = AdRequest.Builder().build()
-    adView.loadAd(adRequest)
+    val adRequest = AdRequest.Builder();
+
+    val rawTargetingInfo = args?.get("targetingInfo") ?: null;
+    val targetingInfo = rawTargetingInfo as? HashMap<*, *>;
+    val testDevices: List<String> = targetingInfo?.get("testDevices") as? List<String> ?: listOf();
+    for (testDeviceId in testDevices) {
+      adRequest.addTestDevice(testDeviceId);
+    }
+
+    val keywords: List<String> = targetingInfo?.get("keywords") as? List<String> ?: listOf();
+    for (keyword in keywords) {
+      adRequest.addKeyword(keyword);
+    }
+
+    val childDirected: Boolean = targetingInfo?.get("childDirected") as? Boolean ?: false
+    if (childDirected) {
+      adRequest.tagForChildDirectedTreatment(childDirected);
+    }
+
+    val contentUrl: String? = targetingInfo?.get("contentUrl") as? String
+    if (!contentUrl.isNullOrEmpty()) {
+      adRequest.setContentUrl(contentUrl)
+    }
+
+    adView.loadAd(adRequest.build())
   }
 
   private fun getSize(size: HashMap<*, *>) : AdSize {
