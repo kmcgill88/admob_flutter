@@ -11,12 +11,12 @@ workflows:
   primary:
     steps:
       - git-clone@4.0.17: {}
-      - cache-pull@2.1.1: {}
+      - cache-pull@2.1.3: {}
       - flutter-installer: {}
-      - flutter@0.0.7:
+      - flutter@0.0.8:
           inputs:
             - commands: packages get|analyze
-            - version: 1.9.1+hotfix.4
+            - version: 1.12.13+hotfix.5
       - script@1.1.5:
           inputs:
             - content: |-
@@ -29,7 +29,7 @@ workflows:
                 cd example
                 flutter build ios --debug --no-codesign
                 flutter build apk --debug
-      - cache-push@2.2.1: {}
+      - cache-push@2.2.3: {}
     meta:
       bitrise.io:
         stack: osx-xcode-11.1.x
