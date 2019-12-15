@@ -16,7 +16,7 @@ workflows:
       - flutter@0.0.8:
           inputs:
             - commands: packages get|analyze
-            - version: 1.12.13+hotfix.5
+            - version: 1.12.13+hotfix.6
       - script@1.1.5:
           inputs:
             - content: |-
