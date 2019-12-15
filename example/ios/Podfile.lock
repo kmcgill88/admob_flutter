@@ -79,7 +79,7 @@ PODS:
 
 DEPENDENCIES:
   - admob_flutter (from `.symlinks/plugins/admob_flutter/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `Flutter`)
 
 SPEC REPOS:
   trunk:
@@ -100,7 +100,7 @@ EXTERNAL SOURCES:
   admob_flutter:
     :path: ".symlinks/plugins/admob_flutter/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: Flutter
 
 SPEC CHECKSUMS:
   admob_flutter: 8033bcca85371a0554aa99d525a83a4770e679f0
@@ -118,6 +118,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: f895fde57977df4e0233edda0dbeac490e3703b6
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
 
-PODFILE CHECKSUM: ab22d40ed0274db5d12f50a7f39e2d55bc96f996
+PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
 
 COCOAPODS: 1.8.3
