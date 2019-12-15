@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Admob.initialize(getAppId());
   runApp(MyApp());
 }
