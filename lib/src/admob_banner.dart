@@ -1,3 +1,4 @@
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'admob_events.dart';
 class AdmobBanner extends StatefulWidget {
   final String adUnitId;
   final AdmobBannerSize adSize;
+  final MobileAdTargetingInfo targetingInfo;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
 
@@ -15,6 +17,7 @@ class AdmobBanner extends StatefulWidget {
     Key key,
     @required this.adUnitId,
     @required this.adSize,
+    this.targetingInfo,
     this.listener,
     this.onBannerCreated,
   }) : super(key: key);
@@ -38,6 +41,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
           creationParams: <String, dynamic>{
             "adUnitId": widget.adUnitId,
             "adSize": widget.adSize.toMap,
+            "targetingInfo": widget.targetingInfo?.toJson(),
           },
           creationParamsCodec: StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,
@@ -53,6 +57,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
           creationParams: <String, dynamic>{
             "adUnitId": widget.adUnitId,
             "adSize": widget.adSize.toMap,
+            "targetingInfo": widget.targetingInfo.toJson(),
           },
           creationParamsCodec: StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,
