@@ -21,7 +21,7 @@ Add this to your package's pubspec.yaml file:
 
 ```dart
 dependencies:
-  admob_flutter: "^0.3.4"
+  admob_flutter: "^1.0.0-beta"
 
 ```
 
@@ -47,7 +47,6 @@ import 'package:admob_flutter/admob_flutter.dart';
 ### Supported Platforms
 - `0.3.0` >= iOS
 - `0.2.0` >= AndroidX
-- FlutterSdk >=2.1.0 < 3.0.0
 
 ### Supported Admob features
 - Banner Ads
