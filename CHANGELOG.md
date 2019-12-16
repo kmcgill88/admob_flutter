@@ -1,7 +1,10 @@
-## [0.3.5] - 2019/12/15
+## [1.0.0-beta] - 2019/12/15
 - Update Android dependencies
 - Update iOS Podfile for Flutter 1.12.13+hotfix.5
-- Update example for Flutter 1.12.13+hotfix.5
+- Update example for Flutter to 1.12.13+hotfix.5
+- Update Bitrise build machine to Xcode 11.3.x, on macOS 10.14.6 (Mojave)
+- Set min Flutter version to 1.10.x
+- Set plug-in platforms to Android and iOS
 
 ## [0.3.4] - 2019/10/25
 - Pin iOS dependencies
