@@ -1,7 +1,7 @@
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'MobileAdTargetingInfo.dart';
 import 'admob_banner_controller.dart';
 import 'admob_banner_size.dart';
 import 'admob_events.dart';

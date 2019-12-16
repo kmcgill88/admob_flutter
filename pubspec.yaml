@@ -14,8 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.1.6
-  firebase_admob: 0.9.0+7
-
 
 dev_dependencies:
   pedantic: ^1.8.0
