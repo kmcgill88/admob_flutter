@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,10 +19,23 @@ class _MyAppState extends State<MyApp> {
   AdmobBannerSize bannerSize;
   AdmobInterstitial interstitialAd;
   AdmobReward rewardAd;
+  MobileAdTargetingInfo targetingInfo;
 
   @override
   void initState() {
     super.initState();
+
+    targetingInfo = MobileAdTargetingInfo(
+      keywords: <String>['cars', 'motobike'],
+      contentUrl: 'https://flutter.io',
+      birthday: DateTime.now(),
+      childDirected: false,
+      designedForFamilies: false,
+      gender: MobileAdGender
+          .male, // or MobileAdGender.female, MobileAdGender.unknown
+      testDevices: <String>[], // Android emulators are considered test devices
+    );
+
     bannerSize = AdmobBannerSize.BANNER;
 
     interstitialAd = AdmobInterstitial(
@@ -165,31 +177,31 @@ class _MyAppState extends State<MyApp> {
                       },
                       itemBuilder: (BuildContext context) =>
                           <PopupMenuEntry<AdmobBannerSize>>[
-                            PopupMenuItem(
-                              value: AdmobBannerSize.BANNER,
-                              child: Text('BANNER'),
-                            ),
-                            PopupMenuItem(
-                              value: AdmobBannerSize.LARGE_BANNER,
-                              child: Text('LARGE_BANNER'),
-                            ),
-                            PopupMenuItem(
-                              value: AdmobBannerSize.MEDIUM_RECTANGLE,
-                              child: Text('MEDIUM_RECTANGLE'),
-                            ),
-                            PopupMenuItem(
-                              value: AdmobBannerSize.FULL_BANNER,
-                              child: Text('FULL_BANNER'),
-                            ),
-                            PopupMenuItem(
-                              value: AdmobBannerSize.LEADERBOARD,
-                              child: Text('LEADERBOARD'),
-                            ),
-                            PopupMenuItem(
-                              value: AdmobBannerSize.SMART_BANNER,
-                              child: Text('SMART_BANNER'),
-                            ),
-                          ],
+                        PopupMenuItem(
+                          value: AdmobBannerSize.BANNER,
+                          child: Text('BANNER'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.LARGE_BANNER,
+                          child: Text('LARGE_BANNER'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.MEDIUM_RECTANGLE,
+                          child: Text('MEDIUM_RECTANGLE'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.FULL_BANNER,
+                          child: Text('FULL_BANNER'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.LEADERBOARD,
+                          child: Text('LEADERBOARD'),
+                        ),
+                        PopupMenuItem(
+                          value: AdmobBannerSize.SMART_BANNER,
+                          child: Text('SMART_BANNER'),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -209,6 +221,7 @@ class _MyAppState extends State<MyApp> {
                     child: AdmobBanner(
                       adUnitId: getBannerAdUnitId(),
                       adSize: bannerSize,
+                      targetingInfo: targetingInfo,
                       listener:
                           (AdmobAdEvent event, Map<String, dynamic> args) {
                         handleEvent(event, args, 'Banner');

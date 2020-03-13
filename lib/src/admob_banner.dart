@@ -1,6 +1,8 @@
+import 'package:admob_flutter/src/admob_targeting_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'admob_banner_controller.dart';
 import 'admob_banner_size.dart';
 import 'admob_events.dart';
@@ -10,6 +12,7 @@ class AdmobBanner extends StatefulWidget {
   final AdmobBannerSize adSize;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
+  final MobileAdTargetingInfo targetingInfo;
 
   AdmobBanner({
     Key key,
@@ -17,6 +20,7 @@ class AdmobBanner extends StatefulWidget {
     @required this.adSize,
     this.listener,
     this.onBannerCreated,
+    this.targetingInfo,
   }) : super(key: key);
 
   @override
@@ -31,14 +35,19 @@ class _AdmobBannerState extends State<AdmobBanner> {
   Widget build(BuildContext context) {
     if (defaultTargetPlatform == TargetPlatform.android) {
       return Container(
-        width: widget.adSize.width >= 0 ? widget.adSize.width.toDouble() : double.infinity,
-        height: widget.adSize.height >= 0 ? widget.adSize.height.toDouble() : double.infinity,
+        width: widget.adSize.width >= 0
+            ? widget.adSize.width.toDouble()
+            : double.infinity,
+        height: widget.adSize.height >= 0
+            ? widget.adSize.height.toDouble()
+            : double.infinity,
         child: AndroidView(
           key: _key,
           viewType: 'admob_flutter/banner',
           creationParams: <String, dynamic>{
             "adUnitId": widget.adUnitId,
             "adSize": widget.adSize.toMap,
+            "targetingInfo": widget.targetingInfo?.toMap,
           },
           creationParamsCodec: const StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,
