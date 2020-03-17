@@ -10,3 +10,7 @@ build/
 example/ios/Flutter/flutter_export_environment.sh
 .vscode
 example/.flutter-plugins-dependencies
+android/gradlew
+android/gradlew.bat
+android/gradle/wrapper/gradle-wrapper.jar
+android/gradle/wrapper/gradle-wrapper.properties
