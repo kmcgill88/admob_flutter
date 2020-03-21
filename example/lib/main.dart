@@ -45,8 +45,7 @@ class _MyAppState extends State<MyApp> {
     rewardAd.load();
   }
 
-  void handleEvent(
-      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+  void handleEvent(AdmobAdEvent event, Map<String, dynamic> args, String adType) {
     switch (event) {
       case AdmobAdEvent.loaded:
         showSnackBar('New Admob $adType Ad loaded!');
@@ -109,62 +108,61 @@ class _MyAppState extends State<MyApp> {
         bottomNavigationBar: Builder(
           builder: (BuildContext context) {
             return Container(
-              height: 50,
               color: Colors.blueGrey,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: FlatButton(
-                      child: Text(
-                        'Show Interstitial',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () async {
-                        if (await interstitialAd.isLoaded) {
-                          interstitialAd.show();
-                        } else {
-                          showSnackBar("Interstitial ad is still loading...");
-                        }
-                      },
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero),
-                    ),
-                  ),
-                  Expanded(
-                    child: FlatButton(
-                      child: Text(
-                        'Show Reward',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () async {
-                        if (await rewardAd.isLoaded) {
-                          rewardAd.show();
-                        } else {
-                          showSnackBar("Reward ad is still loading...");
-                        }
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: PopupMenuButton(
-                      initialValue: bannerSize,
-                      child: Center(
-                        child: Text(
-                          'Banner size',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500, color: Colors.white),
+              child: SafeArea(
+                child: SizedBox(
+                  height: 50,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: FlatButton(
+                          child: Text(
+                            'Show Interstitial',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            if (await interstitialAd.isLoaded) {
+                              interstitialAd.show();
+                            } else {
+                              showSnackBar("Interstitial ad is still loading...");
+                            }
+                          },
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                         ),
                       ),
-                      offset: Offset(0, 20),
-                      onSelected: (AdmobBannerSize newSize) {
-                        setState(() {
-                          bannerSize = newSize;
-                        });
-                      },
-                      itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<AdmobBannerSize>>[
+                      Expanded(
+                        child: FlatButton(
+                          child: Text(
+                            'Show Reward',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            if (await rewardAd.isLoaded) {
+                              rewardAd.show();
+                            } else {
+                              showSnackBar("Reward ad is still loading...");
+                            }
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: PopupMenuButton(
+                          initialValue: bannerSize,
+                          child: Center(
+                            child: Text(
+                              'Banner size',
+                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+                            ),
+                          ),
+                          offset: Offset(0, 20),
+                          onSelected: (AdmobBannerSize newSize) {
+                            setState(() {
+                              bannerSize = newSize;
+                            });
+                          },
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry<AdmobBannerSize>>[
                             PopupMenuItem(
                               value: AdmobBannerSize.BANNER,
                               child: Text('BANNER'),
@@ -186,13 +184,22 @@ class _MyAppState extends State<MyApp> {
                               child: Text('LEADERBOARD'),
                             ),
                             PopupMenuItem(
-                              value: AdmobBannerSize.SMART_BANNER,
+                              value: AdmobBannerSize.SMART_BANNER(context),
                               child: Text('SMART_BANNER'),
                             ),
+                            PopupMenuItem(
+                              value: AdmobBannerSize.ADAPTIVE_BANNER(
+                                width:
+                                    MediaQuery.of(context).size.width.toInt() - 40, // considering EdgeInsets.all(20.0)
+                              ),
+                              child: Text('ADAPTIVE_BANNER'),
+                            ),
                           ],
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             );
           },
@@ -209,8 +216,7 @@ class _MyAppState extends State<MyApp> {
                     child: AdmobBanner(
                       adUnitId: getBannerAdUnitId(),
                       adSize: bannerSize,
-                      listener:
-                          (AdmobAdEvent event, Map<String, dynamic> args) {
+                      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
                         handleEvent(event, args, 'Banner');
                       },
                     ),
@@ -299,4 +305,3 @@ String getRewardBasedVideoAdUnitId() {
   }
   return null;
 }
-

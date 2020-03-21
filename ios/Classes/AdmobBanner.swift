@@ -16,6 +16,7 @@
  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import Flutter
 import Foundation
 import GoogleMobileAds
 
@@ -37,71 +38,73 @@ class AdmobBanner : NSObject, FlutterPlatformView {
     }
     
     func view() -> UIView {
-        return getBannerAdView() ?? UIView()
+        return getOrSetupBannerAdView()
     }
 
-    fileprivate func dispose() {
+    private func dispose() {
         adView?.removeFromSuperview()
         adView = nil
         channel.setMethodCallHandler(nil)
     }
     
-    fileprivate func getBannerAdView() -> GADBannerView? {
-        if adView == nil {
-            adView = GADBannerView()
-            adView!.rootViewController = UIApplication.shared.keyWindow?.rootViewController
-            adView!.frame = self.frame.width == 0 ? CGRect(x: 0, y: 0, width: 1, height: 1) : self.frame
-            adView!.adUnitID = self.args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/2934735716"
-            channel.setMethodCallHandler { [weak self] (flutterMethodCall: FlutterMethodCall, flutterResult: FlutterResult) in
-                switch flutterMethodCall.method {
-                case "setListener":
-                    self?.adView?.delegate = self
-                    break
-                case "dispose":
-                    self?.dispose()
-                    break
-                default:
-                    flutterResult(FlutterMethodNotImplemented)
-                }
-            }
-            requestAd()
+    private func getOrSetupBannerAdView() -> GADBannerView {
+        if let adView = adView {
+            return adView
         }
-        
+
+        let adView = GADBannerView(adSize: adSize)
+        self.adView = adView
+        adView.rootViewController = UIApplication.shared.keyWindow?.rootViewController
+        adView.frame = frame.width == 0 ? CGRect(x: 0, y: 0, width: 1, height: 1) : frame
+        adView.adUnitID = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/2934735716"
+        channel.setMethodCallHandler { [weak self] (flutterMethodCall: FlutterMethodCall, flutterResult: FlutterResult) in
+            switch flutterMethodCall.method {
+            case "setListener":
+                self?.adView?.delegate = self
+            case "dispose":
+                self?.dispose()
+            default:
+                flutterResult(FlutterMethodNotImplemented)
+            }
+        }
+        adView.load(GADRequest())
+
         return adView
     }
     
-    fileprivate func requestAd() {
-        if let ad = getBannerAdView() {
-            let request = GADRequest()
-            ad.load(request)
+    private var adSize: GADAdSize {
+        guard let size = args["adSize"] as? [String: Any] else {
+            assertionFailure("failed to get adSize")
+            return kGADAdSizeBanner // fallback value
         }
-    }
-    
-    fileprivate func getSize() -> GADAdSize {
-        let size = args["adSize"] as? [String: Any]
-        let width = size!["width"] as? Int ?? 0
-        let height = size!["height"] as? Int ?? 0
-        let name = size!["name"] as! String
-        
-        switch name {
-        case "BANNER":
-            return kGADAdSizeBanner
-        case "LARGE_BANNER":
-            return kGADAdSizeLargeBanner
-        case "MEDIUM_RECTANGLE":
-            return kGADAdSizeMediumRectangle
-        case "FULL_BANNER":
-            return kGADAdSizeFullBanner
-        case "LEADERBOARD":
-            return kGADAdSizeLeaderboard
-        case "SMART_BANNER":
-            // TODO: Do we need Landscape too?
-            return kGADAdSizeSmartBannerPortrait
-        default:
-            return GADAdSize.init(size: CGSize(width: width, height: height), flags: 0)
-        }
-    }
 
+        if let name = size["name"] as? String {
+            switch name {
+            case "BANNER":
+                return kGADAdSizeBanner
+            case "LARGE_BANNER":
+                return kGADAdSizeLargeBanner
+            case "MEDIUM_RECTANGLE":
+                return kGADAdSizeMediumRectangle
+            case "FULL_BANNER":
+                return kGADAdSizeFullBanner
+            case "LEADERBOARD":
+                return kGADAdSizeLeaderboard
+            case "SMART_BANNER":
+                // TODO: Do we need Landscape too?
+                return kGADAdSizeSmartBannerPortrait
+            case "ADAPTIVE_BANNER":
+                return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(frame.width)
+            default:
+                assertionFailure("invalid adSize.name")
+                break
+            }
+        }
+
+        let width = size["width"] as? Int ?? 0
+        let height = size["height"] as? Int ?? 0
+        return GADAdSize(size: CGSize(width: width, height: height), flags: 0)
+    }
 }
 
 extension AdmobBanner : GADBannerViewDelegate {

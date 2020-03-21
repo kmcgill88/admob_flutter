@@ -42,7 +42,30 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
         GADMobileAds.sharedInstance().start { (status: GADInitializationStatus) in
             print("iOS Admob status: \(status.adapterStatusesByClassName)")
         }
-        break
+    case "banner_size":
+        guard let args = call.arguments as? [String: Any],
+            let name = args["name"] as? String,
+            let width = args["width"] as? CGFloat else {
+                result(FlutterError(code: "banner_size", message: "invalid arguments", details: call.arguments))
+                return
+        }
+        switch name {
+        case "SMART_BANNER":
+            // TODO: Do we need Landscape too?
+            let height: CGFloat = UIApplication.shared.keyWindow?.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.compact ? 50 : 90;
+            result([
+                "width": width,
+                "height": height,
+            ])
+        case "ADAPTIVE_BANNER":
+            let adSize = GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(width)
+            result([
+                "width": adSize.size.width,
+                "height": adSize.size.height,
+            ])
+        default:
+            result(FlutterError(code: "banner_size", message: "not implemented name", details: name))
+        }
     default:
         result(FlutterMethodNotImplemented)
     }
