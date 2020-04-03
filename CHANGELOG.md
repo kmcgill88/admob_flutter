@@ -1,3 +1,7 @@
+## [1.0.0-beta.2] - 2020/04/03
+- Add Adaptive banner support.
+- Now prevents ads from being reloaded on setState.
+
 ## [1.0.0-beta] - 2019/12/15
 - Update Android dependencies
 - Update iOS Podfile for Flutter 1.12.13+hotfix.5

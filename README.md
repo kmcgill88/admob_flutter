@@ -21,7 +21,7 @@ Add this to your package's pubspec.yaml file:
 
 ```dart
 dependencies:
-  admob_flutter: "^1.0.0-beta"
+  admob_flutter: "^1.0.0-beta.2"
 
 ```
 
