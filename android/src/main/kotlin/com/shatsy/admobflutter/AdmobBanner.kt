@@ -2,7 +2,6 @@ package com.shatsy.admobflutter
 
 import android.content.Context
 import android.view.View
-import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -20,14 +19,14 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
   init {
     channel.setMethodCallHandler(this)
 
-    adView.adSize = getSize(args?.get("adSize") as HashMap<*, *>)
+    adView.adSize = getSize(context, args?.get("adSize") as HashMap<*, *>)
     adView.adUnitId = args?.get("adUnitId") as String?
 
     val adRequest = AdRequest.Builder().build()
     adView.loadAd(adRequest)
   }
 
-  private fun getSize(size: HashMap<*, *>) : AdSize {
+  private fun getSize(context: Context, size: HashMap<*, *>) : AdSize {
     val width = size["width"] as Int
     val height = size["height"] as Int
     val name = size["name"] as String
@@ -39,6 +38,7 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
       "FULL_BANNER" -> AdSize.FULL_BANNER
       "LEADERBOARD" -> AdSize.LEADERBOARD
       "SMART_BANNER" -> AdSize.SMART_BANNER
+      "ADAPTIVE_BANNER" -> AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width)
       else -> AdSize(width, height)
     }
   }

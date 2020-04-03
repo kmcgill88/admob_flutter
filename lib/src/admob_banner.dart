@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'admob.dart';
 import 'admob_banner_controller.dart';
 import 'admob_banner_size.dart';
 import 'admob_events.dart';
@@ -26,42 +27,65 @@ class AdmobBanner extends StatefulWidget {
 class _AdmobBannerState extends State<AdmobBanner> {
   UniqueKey _key = UniqueKey();
   AdmobBannerController _controller;
+  Future<Size> adSize;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (!widget.adSize.hasFixedSize) {
+      adSize = Admob.bannerSize(widget.adSize);
+    } else {
+      adSize = Future.value(Size(
+        widget.adSize.width.toDouble(),
+        widget.adSize.height.toDouble(),
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return Container(
-        width: widget.adSize.width >= 0 ? widget.adSize.width.toDouble() : double.infinity,
-        height: widget.adSize.height >= 0 ? widget.adSize.height.toDouble() : double.infinity,
-        child: AndroidView(
-          key: _key,
-          viewType: 'admob_flutter/banner',
-          creationParams: <String, dynamic>{
-            "adUnitId": widget.adUnitId,
-            "adSize": widget.adSize.toMap,
-          },
-          creationParamsCodec: const StandardMessageCodec(),
-          onPlatformViewCreated: _onPlatformViewCreated,
-        ),
-      );
-    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return Container(
-        width: widget.adSize.width.toDouble(),
-        height: widget.adSize.height.toDouble(),
-        child: UiKitView(
-          key: _key,
-          viewType: 'admob_flutter/banner',
-          creationParams: <String, dynamic>{
-            "adUnitId": widget.adUnitId,
-            "adSize": widget.adSize.toMap,
-          },
-          creationParamsCodec: const StandardMessageCodec(),
-          onPlatformViewCreated: _onPlatformViewCreated,
-        ),
-      );
-    } else {
-      return Text('$defaultTargetPlatform is not yet supported by the plugin');
-    }
+    return FutureBuilder<Size>(
+      future: adSize,
+      builder: (context, snapshot) {
+        final adSize = snapshot.data;
+        if (adSize == null) {
+          return SizedBox.shrink();
+        }
+
+        if (defaultTargetPlatform == TargetPlatform.android) {
+          return SizedBox.fromSize(
+            size: adSize,
+            child: AndroidView(
+              key: _key,
+              viewType: 'admob_flutter/banner',
+              creationParams: <String, dynamic>{
+                "adUnitId": widget.adUnitId,
+                "adSize": widget.adSize.toMap,
+              },
+              creationParamsCodec: const StandardMessageCodec(),
+              onPlatformViewCreated: _onPlatformViewCreated,
+            ),
+          );
+        } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+          return SizedBox.fromSize(
+            size: adSize,
+            child: UiKitView(
+              key: _key,
+              viewType: 'admob_flutter/banner',
+              creationParams: <String, dynamic>{
+                "adUnitId": widget.adUnitId,
+                "adSize": widget.adSize.toMap,
+              },
+              creationParamsCodec: const StandardMessageCodec(),
+              onPlatformViewCreated: _onPlatformViewCreated,
+            ),
+          );
+        }
+
+        return Text('$defaultTargetPlatform is not yet supported by the plugin');
+      },
+    );
   }
 
   @override
