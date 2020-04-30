@@ -17,7 +17,11 @@
  */
 
 #import "AdmobFlutterPlugin.h"
+#if __has_include(<admob_flutter/admob_flutter-Swift.h>)
 #import <admob_flutter/admob_flutter-Swift.h>
+#else
+#import "admob_flutter-Swift.h"
+#endif
 
 
 @implementation AdmobFlutterPlugin
