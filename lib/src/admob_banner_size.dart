@@ -15,10 +15,16 @@ class AdmobBannerSize {
       AdmobBannerSize(width: 468, height: 60, name: 'FULL_BANNER');
   static const AdmobBannerSize LEADERBOARD =
       AdmobBannerSize(width: 728, height: 90, name: 'LEADERBOARD');
-  AdmobBannerSize.SMART_BANNER(BuildContext context):
-        this.width = MediaQuery.of(context).size.width.toInt(), this.height = -2, this.name = 'SMART_BANNER';
-  AdmobBannerSize.ADAPTIVE_BANNER({@required int width}):
-      this.width = width, this.height = -2, this.name = 'ADAPTIVE_BANNER';
+
+  AdmobBannerSize.SMART_BANNER(BuildContext context)
+      : this.width = MediaQuery.of(context).size.width.toInt(),
+        this.height = -2,
+        this.name = 'SMART_BANNER';
+
+  AdmobBannerSize.ADAPTIVE_BANNER({@required int width})
+      : this.width = width,
+        this.height = -2,
+        this.name = 'ADAPTIVE_BANNER';
 
   const AdmobBannerSize({
     @required this.width,

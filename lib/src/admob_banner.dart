@@ -1,6 +1,8 @@
+import 'package:admob_flutter/src/admob_targeting_targetinfo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'admob.dart';
 import 'admob_banner_controller.dart';
 import 'admob_banner_size.dart';
@@ -11,6 +13,7 @@ class AdmobBanner extends StatefulWidget {
   final AdmobBannerSize adSize;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
+  final MobileAdTargetingInfo _targetingInfo;
 
   AdmobBanner({
     Key key,
@@ -18,7 +21,9 @@ class AdmobBanner extends StatefulWidget {
     @required this.adSize,
     this.listener,
     this.onBannerCreated,
-  }) : super(key: key);
+    MobileAdTargetingInfo targetingInfo,
+  })  : _targetingInfo = targetingInfo ?? const MobileAdTargetingInfo(),
+        super(key: key);
 
   @override
   _AdmobBannerState createState() => _AdmobBannerState();
@@ -60,8 +65,9 @@ class _AdmobBannerState extends State<AdmobBanner> {
               key: _key,
               viewType: 'admob_flutter/banner',
               creationParams: <String, dynamic>{
-                "adUnitId": widget.adUnitId,
-                "adSize": widget.adSize.toMap,
+                'adUnitId': widget.adUnitId,
+                'adSize': widget.adSize.toMap,
+                'targetingInfo': widget._targetingInfo?.toJson(),
               },
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,
@@ -74,8 +80,9 @@ class _AdmobBannerState extends State<AdmobBanner> {
               key: _key,
               viewType: 'admob_flutter/banner',
               creationParams: <String, dynamic>{
-                "adUnitId": widget.adUnitId,
-                "adSize": widget.adSize.toMap,
+                'adUnitId': widget.adUnitId,
+                'adSize': widget.adSize.toMap,
+                'targetingInfo': widget._targetingInfo?.toJson(),
               },
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,
@@ -83,7 +90,8 @@ class _AdmobBannerState extends State<AdmobBanner> {
           );
         }
 
-        return Text('$defaultTargetPlatform is not yet supported by the plugin');
+        return Text(
+            '$defaultTargetPlatform is not yet supported by the plugin');
       },
     );
   }
