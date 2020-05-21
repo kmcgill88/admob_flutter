@@ -133,7 +133,7 @@ class _MyAppState extends State<MyApp> {
                               interstitialAd.show();
                             } else {
                               showSnackBar(
-                                  "Interstitial ad is still loading...");
+                                  'Interstitial ad is still loading...');
                             }
                           },
                           shape: RoundedRectangleBorder(
@@ -150,7 +150,7 @@ class _MyAppState extends State<MyApp> {
                             if (await rewardAd.isLoaded) {
                               rewardAd.show();
                             } else {
-                              showSnackBar("Reward ad is still loading...");
+                              showSnackBar('Reward ad is still loading...');
                             }
                           },
                         ),

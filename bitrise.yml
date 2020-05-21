@@ -26,6 +26,8 @@ workflows:
             # debug log
             set -x
 
+            git clean -xffd
+
             cd example
             flutter build ios --debug --no-codesign
             flutter build apk --debug
