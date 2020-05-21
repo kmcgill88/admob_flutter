@@ -25,7 +25,7 @@ class AdmobBanner extends StatefulWidget {
 }
 
 class _AdmobBannerState extends State<AdmobBanner> {
-  UniqueKey _key = UniqueKey();
+  final UniqueKey _key = UniqueKey();
   AdmobBannerController _controller;
   Future<Size> adSize;
 
@@ -60,8 +60,8 @@ class _AdmobBannerState extends State<AdmobBanner> {
               key: _key,
               viewType: 'admob_flutter/banner',
               creationParams: <String, dynamic>{
-                "adUnitId": widget.adUnitId,
-                "adSize": widget.adSize.toMap,
+                'adUnitId': widget.adUnitId,
+                'adSize': widget.adSize.toMap,
               },
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,
@@ -74,8 +74,8 @@ class _AdmobBannerState extends State<AdmobBanner> {
               key: _key,
               viewType: 'admob_flutter/banner',
               creationParams: <String, dynamic>{
-                "adUnitId": widget.adUnitId,
-                "adSize": widget.adSize.toMap,
+                'adUnitId': widget.adUnitId,
+                'adSize': widget.adSize.toMap,
               },
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,

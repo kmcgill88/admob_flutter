@@ -16,9 +16,9 @@ class AdmobBannerSize {
   static const AdmobBannerSize LEADERBOARD =
       AdmobBannerSize(width: 728, height: 90, name: 'LEADERBOARD');
   AdmobBannerSize.SMART_BANNER(BuildContext context):
-        this.width = MediaQuery.of(context).size.width.toInt(), this.height = -2, this.name = 'SMART_BANNER';
+        width = MediaQuery.of(context).size.width.toInt(), height = -2, name = 'SMART_BANNER';
   AdmobBannerSize.ADAPTIVE_BANNER({@required int width}):
-      this.width = width, this.height = -2, this.name = 'ADAPTIVE_BANNER';
+      width = width, height = -2, name = 'ADAPTIVE_BANNER';
 
   const AdmobBannerSize({
     @required this.width,

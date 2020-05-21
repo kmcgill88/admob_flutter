@@ -12,6 +12,6 @@ class Admob {
   static Future<Size> bannerSize(AdmobBannerSize admobBannerSize) async {
     final rawResult = await _channel.invokeMethod('banner_size', admobBannerSize.toMap);
     final resultMap = Map<String, num>.from(rawResult);
-    return Size(resultMap["width"].ceilToDouble(), resultMap["height"].ceilToDouble());
+    return Size(resultMap['width'].ceilToDouble(), resultMap['height'].ceilToDouble());
   }
 }

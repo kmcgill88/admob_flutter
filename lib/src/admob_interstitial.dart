@@ -25,7 +25,7 @@ class AdmobInterstitial extends AdmobEventHandler {
   }
 
   Future<bool> get isLoaded async {
-    final bool result =
+    final result =
         await _channel.invokeMethod('isLoaded', <String, dynamic>{
       'id': id,
     });
