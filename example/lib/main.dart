@@ -232,6 +232,12 @@ class _MyAppState extends State<MyApp> {
                           (AdmobAdEvent event, Map<String, dynamic> args) {
                         handleEvent(event, args, 'Banner');
                       },
+                      onBannerCreated: (AdmobBannerController controller) {
+                        // Dispose is called automatically for you when Flutter removes the banner from the widget tree.
+                        // Normally you don't need to worry about disposing this yourself, it's handled.
+                        // If you need direct access to dispose, this is your guy!
+                        // controller.dispose();
+                      },
                     ),
                   ),
                   Container(
@@ -266,7 +272,7 @@ Test Id's from:
 https://developers.google.com/admob/ios/banner
 https://developers.google.com/admob/android/banner
 
-App Id
+App Id - See README where these Id's go
 Android: ca-app-pub-3940256099942544~3347511713
 iOS: ca-app-pub-3940256099942544~1458002511
 
@@ -282,15 +288,6 @@ Reward Video
 Android: ca-app-pub-3940256099942544/5224354917
 iOS: ca-app-pub-3940256099942544/1712485313
 */
-
-String getAppId() {
-  if (Platform.isIOS) {
-    return 'ca-app-pub-3940256099942544~1458002511';
-  } else if (Platform.isAndroid) {
-    return 'ca-app-pub-3940256099942544~3347511713';
-  }
-  return null;
-}
 
 String getBannerAdUnitId() {
   if (Platform.isIOS) {

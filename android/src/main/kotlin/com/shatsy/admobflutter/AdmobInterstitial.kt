@@ -28,6 +28,10 @@ class AdmobInterstitial(private val registrar: PluginRegistry.Registrar): Method
           allAds[id!!] = InterstitialAd(registrar.context())
           allAds[id]!!.adUnitId = adUnitId
         }
+
+        // https://developers.google.com/admob/android/interstitial#create_an_interstitial_ad_object
+        // Unlike iOS a new InterstitialAd object is not required
+        // "A single InterstitialAd object can be used to request and display multiple interstitial ads over the course of an activity's lifespan, so you only need to construct it once."
         allAds[id]?.loadAd(adRequest)
         result.success(null)
       }

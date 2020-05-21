@@ -56,7 +56,7 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
                 self?.rewardAds.removeValue(forKey: id)
                 self?.loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId)
             }
-            delegates[id] = AdmobRewardPluginDelegate(channel: channel, reload: reload)
+            delegates[id] = AdmobRewardPluginDelegate(channel: channel)
             break
         case "load":
             loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId)
@@ -88,6 +88,8 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
     }
     
     private func loadRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String) {
+        
+        
         let video = getRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: rewardBasedVideoAdUnitId)
         let request = GADRequest()
         video.load(request) { [weak self] error in
@@ -113,11 +115,9 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
 
 class AdmobRewardPluginDelegate: NSObject, GADRewardedAdDelegate {
     let channel: FlutterMethodChannel
-    let reload: () -> Void
     
-    init(channel: FlutterMethodChannel, reload: @escaping () -> Void) {
+    init(channel: FlutterMethodChannel) {
         self.channel = channel
-        self.reload = reload
     }
     
     func rewardedAdDidPresent(_ rewardedAd: GADRewardedAd) {
@@ -126,8 +126,6 @@ class AdmobRewardPluginDelegate: NSObject, GADRewardedAdDelegate {
     
     func rewardedAdDidDismiss(_ rewardedAd: GADRewardedAd) {
         channel.invokeMethod("closed", arguments: nil)
-        // https://developers.google.com/admob/ios/rewarded-ads#using_gadrewardedaddelegate_to_preload_the_next_rewarded_ad
-        reload()
     }
     
     func rewardedAd(_ rewardedAd: GADRewardedAd, didFailToPresentWithError error: Error) {

@@ -1,3 +1,10 @@
+## [1.0.0-beta.3] - 2020/05/21
+- Add support for `testDeviceIds`
+- Add some FAQ's to README
+- Update iOS and Android API versions
+- Update iOS rewards to use new api
+- Explicitly `dispose` Banners via `AdmobBannerController`
+
 ## [1.0.0-beta.2] - 2020/04/03
 - Add Adaptive banner support.
 - Now prevents ads from being reloaded on setState.
