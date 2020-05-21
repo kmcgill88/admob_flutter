@@ -56,6 +56,8 @@ class AdmobBanner : NSObject, FlutterPlatformView {
         self.adView = adView
         adView.rootViewController = UIApplication.shared.keyWindow?.rootViewController
         adView.frame = frame.width == 0 ? CGRect(x: 0, y: 0, width: 1, height: 1) : frame
+        
+        // Defaults to test Id's from: https://developers.google.com/admob/ios/banner
         adView.adUnitID = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/2934735716"
         channel.setMethodCallHandler { [weak self] (flutterMethodCall: FlutterMethodCall, flutterResult: FlutterResult) in
             switch flutterMethodCall.method {

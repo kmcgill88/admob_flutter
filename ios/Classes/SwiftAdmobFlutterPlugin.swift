@@ -38,7 +38,9 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
     case "initialize":
         // https://developers.google.com/admob/ios/test-ads#enable_test_devices
         // **iOS simulators are automatically configured as test devices.**
-        // GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = ["You're physical iDevice Id"]
+        if let args = call.arguments as? [String] {
+            GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = args
+        }
         GADMobileAds.sharedInstance().start { (status: GADInitializationStatus) in
             print("iOS Admob status: \(status.adapterStatusesByClassName)")
         }

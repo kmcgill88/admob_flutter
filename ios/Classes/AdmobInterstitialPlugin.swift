@@ -42,6 +42,7 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
             return
         }
         let id = args["id"] as? Int ?? 0
+        // Defaults to test Id's from: https://developers.google.com/admob/ios/banner
         let adUnitId = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/1033173712"
 
         switch call.method {

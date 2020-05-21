@@ -6,7 +6,11 @@ import 'package:admob_flutter/admob_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Admob.initialize(getAppId());
+  // Initialize without device test ids
+  Admob.initialize();
+
+  // Add a list of test ids.
+  // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
   runApp(MyApp());
 }
 
