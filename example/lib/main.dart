@@ -39,17 +39,19 @@ class _MyAppState extends State<MyApp> {
     );
 
     rewardAd = AdmobReward(
-        adUnitId: getRewardBasedVideoAdUnitId(),
-        listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-          if (event == AdmobAdEvent.closed) rewardAd.load();
-          handleEvent(event, args, 'Reward');
-        });
+      adUnitId: getRewardBasedVideoAdUnitId(),
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        if (event == AdmobAdEvent.closed) rewardAd.load();
+        handleEvent(event, args, 'Reward');
+      },
+    );
 
     interstitialAd.load();
     rewardAd.load();
   }
 
-  void handleEvent(AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
     switch (event) {
       case AdmobAdEvent.loaded:
         showSnackBar('New Admob $adType Ad loaded!');
@@ -130,10 +132,12 @@ class _MyAppState extends State<MyApp> {
                             if (await interstitialAd.isLoaded) {
                               interstitialAd.show();
                             } else {
-                              showSnackBar("Interstitial ad is still loading...");
+                              showSnackBar(
+                                  "Interstitial ad is still loading...");
                             }
                           },
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero),
                         ),
                       ),
                       Expanded(
@@ -157,7 +161,9 @@ class _MyAppState extends State<MyApp> {
                           child: Center(
                             child: Text(
                               'Banner size',
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
                             ),
                           ),
                           offset: Offset(0, 20),
@@ -166,7 +172,8 @@ class _MyAppState extends State<MyApp> {
                               bannerSize = newSize;
                             });
                           },
-                          itemBuilder: (BuildContext context) => <PopupMenuEntry<AdmobBannerSize>>[
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<AdmobBannerSize>>[
                             PopupMenuItem(
                               value: AdmobBannerSize.BANNER,
                               child: Text('BANNER'),
@@ -194,7 +201,8 @@ class _MyAppState extends State<MyApp> {
                             PopupMenuItem(
                               value: AdmobBannerSize.ADAPTIVE_BANNER(
                                 width:
-                                    MediaQuery.of(context).size.width.toInt() - 40, // considering EdgeInsets.all(20.0)
+                                    MediaQuery.of(context).size.width.toInt() -
+                                        40, // considering EdgeInsets.all(20.0)
                               ),
                               child: Text('ADAPTIVE_BANNER'),
                             ),
@@ -220,7 +228,8 @@ class _MyAppState extends State<MyApp> {
                     child: AdmobBanner(
                       adUnitId: getBannerAdUnitId(),
                       adSize: bannerSize,
-                      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+                      listener:
+                          (AdmobAdEvent event, Map<String, dynamic> args) {
                         handleEvent(event, args, 'Banner');
                       },
                     ),

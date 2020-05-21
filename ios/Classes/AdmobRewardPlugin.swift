@@ -22,8 +22,8 @@ import GoogleMobileAds
 
 public class AdmobRewardPlugin: NSObject, FlutterPlugin {
     
-    fileprivate var allIds: [Int: GADRewardBasedVideoAd] = [:]
-    fileprivate var delegates: [Int: GADRewardBasedVideoAdDelegate] = [:]
+    fileprivate var rewardAds: [Int: GADRewardedAd] = [:]
+    fileprivate var delegates: [Int: AdmobRewardPluginDelegate] = [:]
     fileprivate var pluginRegistrar: FlutterPluginRegistrar?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -52,22 +52,24 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
                 name: "admob_flutter/reward_\(id)",
                 binaryMessenger: pluginRegistrar!.messenger()
             )
-            delegates[id] = AdmobRewardPluginDelegate(channel: channel)
-            let rewardVideo = getRewardBasedVideoAd(id: id)
-            rewardVideo.delegate = delegates[id]
+            let reload: () -> Void = { [weak self] in
+                self?.rewardAds.removeValue(forKey: id)
+                self?.loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId)
+            }
+            delegates[id] = AdmobRewardPluginDelegate(channel: channel, reload: reload)
             break
         case "load":
             loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId)
             result(nil)
             break
         case "isLoaded":
-            let isReady = getRewardBasedVideoAd(id: id).isReady
+            let isReady = getRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId).isReady
             result(isReady)
             break
         case "show":
-            let rewardVideo = getRewardBasedVideoAd(id: id)
+            let rewardVideo = getRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId)
             if rewardVideo.isReady, let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
-                rewardVideo.present(fromRootViewController: rootViewController)
+                rewardVideo.present(fromRootViewController: rootViewController, delegate: delegates[id]!)
             } else {
                 result(FlutterError(
                     code: "GADRewardBasedVideoAd Error",
@@ -77,7 +79,7 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
             }
             break
         case "dispose":
-            allIds.removeValue(forKey: id)
+            rewardAds.removeValue(forKey: id)
             delegates.removeValue(forKey: id)
             break
         default:
@@ -86,64 +88,56 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
     }
     
     private func loadRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String) {
-        let interstantial = getRewardBasedVideoAd(id: id)
+        let video = getRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: rewardBasedVideoAdUnitId)
         let request = GADRequest()
-        interstantial.load(request, withAdUnitID: rewardBasedVideoAdUnitId)
+        video.load(request) { [weak self] error in
+            if let error = error {
+                // Handle ad failed to load case.
+                self?.delegates[id]?.channel.invokeMethod("failedToLoad", arguments: ["errorCode": error.localizedDescription])
+            } else {
+                // Ad successfully loaded.
+                self?.delegates[id]?.channel.invokeMethod("loaded", arguments: nil)
+            }
+        }
     }
     
-    private func getRewardBasedVideoAd(id: Int) -> GADRewardBasedVideoAd {
-        if allIds[id] == nil {
-            let rewardBadedVideoAd = GADRewardBasedVideoAd.sharedInstance()
-            allIds[id] = rewardBadedVideoAd
+    private func getRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String) -> GADRewardedAd {
+        if rewardAds[id] == nil {
+            let rewardBadedVideoAd = GADRewardedAd(adUnitID: rewardBasedVideoAdUnitId)
+            rewardAds[id] = rewardBadedVideoAd
         }
         
-        return allIds[id]!
+        return rewardAds[id]!
     }
 }
 
-class AdmobRewardPluginDelegate: NSObject, GADRewardBasedVideoAdDelegate {
+class AdmobRewardPluginDelegate: NSObject, GADRewardedAdDelegate {
     let channel: FlutterMethodChannel
+    let reload: () -> Void
     
-    init(channel: FlutterMethodChannel) {
+    init(channel: FlutterMethodChannel, reload: @escaping () -> Void) {
         self.channel = channel
+        self.reload = reload
     }
-
-    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd, didRewardUserWith reward: GADAdReward) {
+    
+    func rewardedAdDidPresent(_ rewardedAd: GADRewardedAd) {
+        channel.invokeMethod("opened", arguments: nil)
+    }
+    
+    func rewardedAdDidDismiss(_ rewardedAd: GADRewardedAd) {
+        channel.invokeMethod("closed", arguments: nil)
+        // https://developers.google.com/admob/ios/rewarded-ads#using_gadrewardedaddelegate_to_preload_the_next_rewarded_ad
+        reload()
+    }
+    
+    func rewardedAd(_ rewardedAd: GADRewardedAd, didFailToPresentWithError error: Error) {
+        channel.invokeMethod("failedToLoad", arguments: ["errorCode": error.localizedDescription])
+    }
+    
+    func rewardedAd(_ rewardedAd: GADRewardedAd, userDidEarn reward: GADAdReward) {
         channel.invokeMethod("rewarded", arguments: [
             "type": reward.type,
             "amount": reward.amount
         ])
-    }
-    
-    func rewardBasedVideoAdDidOpen(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        channel.invokeMethod("opened", arguments: nil)
-    }
-    
-    func rewardBasedVideoAdDidClose(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        channel.invokeMethod("closed", arguments: nil)
-    }
-    
-    func rewardBasedVideoAdDidReceive(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        channel.invokeMethod("loaded", arguments: nil)
-    }
-    
-    func rewardBasedVideoAdDidStartPlaying(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        channel.invokeMethod("started", arguments: nil)
-    }
-    
-    func rewardBasedVideoAdMetadataDidChange(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        // UNUSED
-    }
-    
-    func rewardBasedVideoAdDidCompletePlaying(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        channel.invokeMethod("completed", arguments: nil)
-    }
-    
-    func rewardBasedVideoAdWillLeaveApplication(_ rewardBasedVideoAd: GADRewardBasedVideoAd) {
-        channel.invokeMethod("leftApplication", arguments: nil)
-    }
-    
-    func rewardBasedVideoAd(_ rewardBasedVideoAd: GADRewardBasedVideoAd, didFailToLoadWithError error: Error) {
-        channel.invokeMethod("failedToLoad", arguments: ["errorCode": error.localizedDescription])
     }
 }
