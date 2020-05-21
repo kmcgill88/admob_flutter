@@ -1,5 +1,5 @@
 PODS:
-  - admob_flutter (1.0.0-beta):
+  - admob_flutter (1.0.0-beta.2):
     - Firebase/AdMob
     - Firebase/Analytics
     - Flutter
@@ -104,7 +104,7 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  admob_flutter: ee0dd62b51c257bb352ee8a208fc62a83a37a113
+  admob_flutter: b868820a46ed2b597b77c56cf208636edfd44440
   Firebase: fe7f74012742ab403451dd283e6909b8f1fb348a
   FirebaseAnalytics: 572e467f3d977825266e8ccd52674aa3e6f47eac
   FirebaseCore: ed0a24c758a57c2b88c5efa8e6a8195e868af589
@@ -122,4 +122,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 1b66dae606f75376c5f2135a8290850eeb09ae83
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1
