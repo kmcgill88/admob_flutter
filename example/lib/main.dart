@@ -9,8 +9,8 @@ void main() {
   // Initialize without device test ids
   Admob.initialize();
 
-  // Add a list of test ids.
-  // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
+//   Add a list of test ids.
+//   Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
   runApp(MyApp());
 }
 
