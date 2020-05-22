@@ -52,10 +52,6 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
                 name: "admob_flutter/reward_\(id)",
                 binaryMessenger: pluginRegistrar!.messenger()
             )
-            let reload: () -> Void = { [weak self] in
-                self?.rewardAds.removeValue(forKey: id)
-                self?.loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId)
-            }
             delegates[id] = AdmobRewardPluginDelegate(channel: channel)
             break
         case "load":
