@@ -1,9 +1,10 @@
 ## [1.0.0-beta.3] - 2020/05/21
 - Add support for `testDeviceIds`
 - Add some FAQ's to README
+- Explicitly `dispose` Banners via `AdmobBannerController`
 - Update iOS and Android API versions
 - Update iOS rewards to use new api
-- Explicitly `dispose` Banners via `AdmobBannerController`
+- Update Bitrise build machine to Xcode 11.5.x, on macOS 10.15.4 (Mojave); Flutter 1.17.1
 
 ## [1.0.0-beta.2] - 2020/04/03
 - Add Adaptive banner support.
