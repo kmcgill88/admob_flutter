@@ -11,5 +11,6 @@
 # specify a specific version of `analysis_options.yaml` instead.
 
 # https://github.com/dart-lang/pedantic/tree/master/lib
+# https://dart.dev/guides/language/analysis-options
 
 include: package:pedantic/analysis_options.1.9.0.yaml

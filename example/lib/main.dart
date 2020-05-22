@@ -6,7 +6,11 @@ import 'package:admob_flutter/admob_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Admob.initialize(getAppId());
+  // Initialize without device test ids
+  Admob.initialize();
+
+//   Add a list of test ids.
+//   Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
   runApp(MyApp());
 }
 
@@ -35,17 +39,19 @@ class _MyAppState extends State<MyApp> {
     );
 
     rewardAd = AdmobReward(
-        adUnitId: getRewardBasedVideoAdUnitId(),
-        listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-          if (event == AdmobAdEvent.closed) rewardAd.load();
-          handleEvent(event, args, 'Reward');
-        });
+      adUnitId: getRewardBasedVideoAdUnitId(),
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        if (event == AdmobAdEvent.closed) rewardAd.load();
+        handleEvent(event, args, 'Reward');
+      },
+    );
 
     interstitialAd.load();
     rewardAd.load();
   }
 
-  void handleEvent(AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
     switch (event) {
       case AdmobAdEvent.loaded:
         showSnackBar('New Admob $adType Ad loaded!');
@@ -126,10 +132,12 @@ class _MyAppState extends State<MyApp> {
                             if (await interstitialAd.isLoaded) {
                               interstitialAd.show();
                             } else {
-                              showSnackBar("Interstitial ad is still loading...");
+                              showSnackBar(
+                                  'Interstitial ad is still loading...');
                             }
                           },
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero),
                         ),
                       ),
                       Expanded(
@@ -142,7 +150,7 @@ class _MyAppState extends State<MyApp> {
                             if (await rewardAd.isLoaded) {
                               rewardAd.show();
                             } else {
-                              showSnackBar("Reward ad is still loading...");
+                              showSnackBar('Reward ad is still loading...');
                             }
                           },
                         ),
@@ -153,7 +161,9 @@ class _MyAppState extends State<MyApp> {
                           child: Center(
                             child: Text(
                               'Banner size',
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
                             ),
                           ),
                           offset: Offset(0, 20),
@@ -162,7 +172,8 @@ class _MyAppState extends State<MyApp> {
                               bannerSize = newSize;
                             });
                           },
-                          itemBuilder: (BuildContext context) => <PopupMenuEntry<AdmobBannerSize>>[
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<AdmobBannerSize>>[
                             PopupMenuItem(
                               value: AdmobBannerSize.BANNER,
                               child: Text('BANNER'),
@@ -190,7 +201,8 @@ class _MyAppState extends State<MyApp> {
                             PopupMenuItem(
                               value: AdmobBannerSize.ADAPTIVE_BANNER(
                                 width:
-                                    MediaQuery.of(context).size.width.toInt() - 40, // considering EdgeInsets.all(20.0)
+                                    MediaQuery.of(context).size.width.toInt() -
+                                        40, // considering EdgeInsets.all(20.0)
                               ),
                               child: Text('ADAPTIVE_BANNER'),
                             ),
@@ -216,8 +228,15 @@ class _MyAppState extends State<MyApp> {
                     child: AdmobBanner(
                       adUnitId: getBannerAdUnitId(),
                       adSize: bannerSize,
-                      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+                      listener:
+                          (AdmobAdEvent event, Map<String, dynamic> args) {
                         handleEvent(event, args, 'Banner');
+                      },
+                      onBannerCreated: (AdmobBannerController controller) {
+                        // Dispose is called automatically for you when Flutter removes the banner from the widget tree.
+                        // Normally you don't need to worry about disposing this yourself, it's handled.
+                        // If you need direct access to dispose, this is your guy!
+                        // controller.dispose();
                       },
                     ),
                   ),
@@ -253,7 +272,7 @@ Test Id's from:
 https://developers.google.com/admob/ios/banner
 https://developers.google.com/admob/android/banner
 
-App Id
+App Id - See README where these Id's go
 Android: ca-app-pub-3940256099942544~3347511713
 iOS: ca-app-pub-3940256099942544~1458002511
 
@@ -269,15 +288,6 @@ Reward Video
 Android: ca-app-pub-3940256099942544/5224354917
 iOS: ca-app-pub-3940256099942544/1712485313
 */
-
-String getAppId() {
-  if (Platform.isIOS) {
-    return 'ca-app-pub-3940256099942544~1458002511';
-  } else if (Platform.isAndroid) {
-    return 'ca-app-pub-3940256099942544~3347511713';
-  }
-  return null;
-}
 
 String getBannerAdUnitId() {
   if (Platform.isIOS) {

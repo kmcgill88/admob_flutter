@@ -5,8 +5,8 @@ import 'package:admob_flutter/admob_flutter.dart';
 class Admob {
   static const _channel = MethodChannel('admob_flutter');
 
-  Admob.initialize(String appId) {
-    _channel.invokeMethod('initialize', appId);
+  Admob.initialize({List<String> testDeviceIds}) {
+    _channel.invokeMethod('initialize', testDeviceIds);
   }
 
   static Future<Size> bannerSize(AdmobBannerSize admobBannerSize) async {

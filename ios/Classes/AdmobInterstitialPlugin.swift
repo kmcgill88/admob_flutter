@@ -42,6 +42,7 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
             return
         }
         let id = args["id"] as? Int ?? 0
+        // Defaults to test Id's from: https://developers.google.com/admob/ios/banner
         let adUnitId = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/1033173712"
 
         switch call.method {
@@ -85,6 +86,8 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
     
     private func getInterstitialAd(id: Int, interstantialAdUnitId: String) -> GADInterstitial {
         if let interstantialAd = allIds[id] {
+            // https://developers.google.com/admob/ios/interstitial#use_gadinterstitialdelegate_to_reload
+            // "GADInterstitial is a one-time-use object. This means once an interstitial is shown, hasBeenUsed returns true and the interstitial can't be used to load another ad. To request another interstitial, you'll need to create a new GADInterstitial object."
             if (interstantialAd.hasBeenUsed) {
                 let interstantialAd = GADInterstitial(adUnitID: interstantialAdUnitId)
                 allIds[id] = interstantialAd

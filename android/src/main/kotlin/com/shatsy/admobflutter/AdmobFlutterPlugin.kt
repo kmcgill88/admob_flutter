@@ -4,11 +4,13 @@ import android.content.Context
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import kotlin.collections.HashMap
 
 fun createAdListener(channel: MethodChannel) : AdListener {
   return object: AdListener() {
@@ -43,7 +45,14 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
 
   override fun onMethodCall(call: MethodCall, result: Result) {
     when(call.method) {
-      "initialize" -> MobileAds.initialize(context)
+      "initialize" -> {
+        MobileAds.initialize(context)
+        @Suppress("UNCHECKED_CAST")
+        (call.arguments as? ArrayList<String>)?.apply {
+            val configuration = RequestConfiguration.Builder().setTestDeviceIds(this).build()
+            MobileAds.setRequestConfiguration(configuration)
+        }
+      }
       "banner_size" -> {
         val args = call.arguments as HashMap<*, *>
         val name = args["name"] as String
