@@ -98,6 +98,8 @@ void main() {
     - TL;DR - Things are working correctly, Admob didn't give you an ad. If the app id + ad unit is new, give it 24/48 hours. See:[161](https://github.com/kmcgill88/admob_flutter/issues/161) [stackoverflow](https://stackoverflow.com/questions/33566485/failed-to-load-ad-3)
 - Ads are not loading
     - TL;DR - Make sure you have the correct combination of id's per platform. See:[161](https://github.com/kmcgill88/admob_flutter/issues/161)
+- Objective-C based project cannot build
+    - TL;DR - You have to enable swift support for your flutter project. See:[stackoverflow](https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter) [123](https://github.com/kmcgill88/admob_flutter/issues/123)
 
 # Pull Requests
 
