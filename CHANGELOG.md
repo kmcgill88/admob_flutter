@@ -1,5 +1,7 @@
-## [1.0.0-beta.4] - 2020/05/xx
+## [1.0.0-beta.4] - 2020/06/02
 - Removed some dead code from `AdmobRewardPlugin.swift`
+- Reverted: Explicitly `dispose` Banners via `AdmobBannerController`
+- More FAQ's added to README
 
 ## [1.0.0-beta.3] - 2020/05/21
 - Add support for `testDeviceIds`
