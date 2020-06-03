@@ -88,12 +88,6 @@ class _AdmobBannerState extends State<AdmobBanner> {
     );
   }
 
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
   void _onPlatformViewCreated(int id) {
     _controller = AdmobBannerController(id, widget.listener);
 
