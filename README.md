@@ -20,7 +20,7 @@ This plugin also has support for Interstitial and Reward ads.
 
 ```yaml
 dependencies:
-  admob_flutter: "^1.0.0-beta.3"
+  admob_flutter: "^1.0.0-beta.4"
 
 ```
 
