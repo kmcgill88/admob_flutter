@@ -28,6 +28,7 @@ class AdmobReward extends AdmobEventHandler {
     final result =
         await _channel.invokeMethod('isLoaded', <String, dynamic>{
       'id': id,
+      'adUnitId': adUnitId,
     });
     return result;
   }
@@ -41,6 +42,7 @@ class AdmobReward extends AdmobEventHandler {
     if (listener != null) {
       await _channel.invokeMethod('setListener', <String, dynamic>{
         'id': id,
+      'adUnitId': adUnitId,
       });
     }
   }
@@ -49,6 +51,7 @@ class AdmobReward extends AdmobEventHandler {
     if (await isLoaded == true) {
       await _channel.invokeMethod('show', <String, dynamic>{
         'id': id,
+      'adUnitId': adUnitId,
       });
     }
   }
@@ -56,6 +59,7 @@ class AdmobReward extends AdmobEventHandler {
   void dispose() async {
     await _channel.invokeMethod('dispose', <String, dynamic>{
       'id': id,
+      'adUnitId': adUnitId,
     });
   }
 }
