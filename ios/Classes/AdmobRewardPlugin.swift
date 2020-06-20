@@ -42,9 +42,14 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
             )
             return
         }
-        let id = args["id"] as? Int ?? 0
-        // Defaults to test Id's from: https://developers.google.com/admob/ios/banner
-        let adUnitId = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/1712485313"
+        guard let id = args["id"] as? Int, let adUnitId = args["adUnitId"] as? String else {
+            result(FlutterError(
+                code: "Missing args!",
+                message: "Reward Ad is missing id or adUnitId.",
+                details: nil)
+            )
+            return
+        }
         
         switch call.method {
         case "setListener":
@@ -84,9 +89,8 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
     }
     
     private func loadRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String) {
-        
-        
-        let video = getRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: rewardBasedVideoAdUnitId)
+        let video = GADRewardedAd(adUnitID: rewardBasedVideoAdUnitId)
+        rewardAds[id] = video
         let request = GADRequest()
         video.load(request) { [weak self] error in
             if let error = error {
