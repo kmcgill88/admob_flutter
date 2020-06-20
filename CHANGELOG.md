@@ -1,3 +1,6 @@
+## [1.0.0-beta.5] - 2020/06/20
+- Fixed [183](https://github.com/kmcgill88/admob_flutter/issues/183) iOS Reward Ad consecutive loads
+
 ## [1.0.0-beta.4] - 2020/06/02
 - Removed some dead code from `AdmobRewardPlugin.swift`
 - Reverted: Explicitly `dispose` Banners via `AdmobBannerController`
