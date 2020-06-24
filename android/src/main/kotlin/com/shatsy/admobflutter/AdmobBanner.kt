@@ -31,7 +31,11 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
   }
   private fun publisherAdRequest(targetInfo: HashMap<*, *>): PublisherAdRequest {
       val request = PublisherAdRequest.Builder()
-      targetInfo.forEach { (key, value) -> request.addCustomTargeting(key as String, value as String) }
+      if(targetInfo.isNotEmpty()){
+        targetInfo.forEach {
+            (key, value) -> request.addCustomTargeting(key as String, value.toString())
+        }
+      }
       return request.build()
   }
   private fun getSize(context: Context, size: HashMap<*, *>) : AdSize {
