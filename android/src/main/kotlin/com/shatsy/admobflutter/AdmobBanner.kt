@@ -5,6 +5,9 @@ import android.view.View
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.doubleclick.AppEventListener
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest
+import com.google.android.gms.ads.doubleclick.PublisherAdView
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodCall
@@ -14,18 +17,23 @@ import io.flutter.plugin.platform.PlatformView
 
 class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: HashMap<*, *>?) : PlatformView, MethodCallHandler {
   private val channel: MethodChannel = MethodChannel(messenger, "admob_flutter/banner_$id")
-  private val adView: AdView = AdView(context)
+  private val adView: PublisherAdView = PublisherAdView(context)
 
   init {
     channel.setMethodCallHandler(this)
 
-    adView.adSize = getSize(context, args?.get("adSize") as HashMap<*, *>)
+    adView.setAdSizes(getSize(context, args?.get("adSize") as HashMap<*, *>))
     adView.adUnitId = args?.get("adUnitId") as String?
-
-    val adRequest = AdRequest.Builder().build()
-    adView.loadAd(adRequest)
+    adView.appEventListener = AppEventListener { name, data ->
+        channel.invokeMethod("appEvent", hashMapOf("name" to name, "data" to data))
+    }
+    adView.loadAd(publisherAdRequest(args?.get("targetInfo") as HashMap<*, *>))
   }
-
+  private fun publisherAdRequest(targetInfo: HashMap<*, *>): PublisherAdRequest {
+      val request = PublisherAdRequest.Builder()
+      targetInfo.forEach { (key, value) -> request.addCustomTargeting(key as String, value as String) }
+      return request.build()
+  }
   private fun getSize(context: Context, size: HashMap<*, *>) : AdSize {
     val width = size["width"] as Int
     val height = size["height"] as Int

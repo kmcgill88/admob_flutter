@@ -9,4 +9,5 @@ enum AdmobAdEvent {
   completed,
   rewarded,
   started,
+  appEvent,
 }

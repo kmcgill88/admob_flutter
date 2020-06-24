@@ -42,6 +42,11 @@ abstract class AdmobEventHandler {
         _listener(
             AdmobAdEvent.rewarded, Map<String, dynamic>.from(call.arguments));
         break;
+      case 'appEvent':
+        _listener(
+            AdmobAdEvent.appEvent, Map<String, dynamic>.from(call.arguments));
+        break;
+
       case 'started':
         _listener(AdmobAdEvent.started, null);
         break;

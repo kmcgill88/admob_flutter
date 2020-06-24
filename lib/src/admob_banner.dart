@@ -11,13 +11,14 @@ class AdmobBanner extends StatefulWidget {
   final AdmobBannerSize adSize;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
-
+  final Map<String, dynamic> targetInfo;
   AdmobBanner({
     Key key,
     @required this.adUnitId,
     @required this.adSize,
     this.listener,
     this.onBannerCreated,
+    this.targetInfo = const {},
   }) : super(key: key);
 
   @override
@@ -61,6 +62,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
               viewType: 'admob_flutter/banner',
               creationParams: <String, dynamic>{
                 'adUnitId': widget.adUnitId,
+                'targetInfo': widget.targetInfo,
                 'adSize': widget.adSize.toMap,
               },
               creationParamsCodec: const StandardMessageCodec(),
@@ -75,6 +77,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
               viewType: 'admob_flutter/banner',
               creationParams: <String, dynamic>{
                 'adUnitId': widget.adUnitId,
+                'targetInfo': widget.targetInfo,
                 'adSize': widget.adSize.toMap,
               },
               creationParamsCodec: const StandardMessageCodec(),
@@ -83,7 +86,8 @@ class _AdmobBannerState extends State<AdmobBanner> {
           );
         }
 
-        return Text('$defaultTargetPlatform is not yet supported by the plugin');
+        return Text(
+            '$defaultTargetPlatform is not yet supported by the plugin');
       },
     );
   }
