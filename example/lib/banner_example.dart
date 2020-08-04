@@ -8,9 +8,10 @@ class BannerExample extends StatefulWidget {
 class _BannerExampleState extends State<BannerExample> {
   @override
   Widget build(BuildContext context) {
-    // TODO: Show example of a single instance banner ad
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Banners'),
+      ),
     );
   }
 }
