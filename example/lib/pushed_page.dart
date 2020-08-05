@@ -1,6 +1,6 @@
+import 'package:admob_flutter_example/extensions.dart';
 import 'package:flutter/material.dart';
 
-import 'main.dart';
 
 class PushedPage extends StatelessWidget {
   @override
@@ -9,7 +9,7 @@ class PushedPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Pushed Page'),
         brightness: Brightness.dark,
-      ).withAdmobBanner(context),
+      ).withBottomAdmobBanner(context),
     );
   }
 }
