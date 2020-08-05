@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:admob_flutter_example/banner_example.dart';
+import 'package:admob_flutter_example/pushed_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:admob_flutter/admob_flutter.dart';
@@ -11,17 +12,154 @@ void main() {
   // Initialize without device test ids
   Admob.initialize();
 
-//   Add a list of test ids.
-//   Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
-  runApp(MyApp());
+  // Add a list of test ids.
+  // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
+
+  // runApp(TopBannerAdAppRecipe(child: MyMaterialApp()));
+  runApp(BottomBannerAdAppRecipe(child: MyMaterialApp()));
+  // runApp(MyMaterialApp());
 }
 
-class MyApp extends StatefulWidget {
+class BottomBannerAdAppRecipe extends StatelessWidget {
+  const BottomBannerAdAppRecipe({
+    Key key,
+    @required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: MediaQuery(
+        data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
+        child: Container(
+          color: Colors.blueGrey,
+          child: Column(children: [
+            Expanded(child: child),
+            SafeArea(
+              top: false,
+              child: Builder(
+                builder: (BuildContext context) {
+                  final size = MediaQuery.of(context).size;
+                  final height = max(size.height * .05, 50.0);
+                  return Container(
+                    width: size.width,
+                    height: height,
+                    child: AdmobBanner(
+                      adUnitId: getBannerAdUnitId(),
+                      adSize: AdmobBannerSize.ADAPTIVE_BANNER(
+                        width: size.width.toInt(),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+class TopBannerAdAppRecipe extends StatelessWidget {
+  const TopBannerAdAppRecipe({
+    Key key,
+    @required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: MediaQuery(
+        data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
+        child: Container(
+          color: Colors.blueGrey,
+          child: Column(children: [
+            SafeArea(
+              bottom: false,
+              child: Builder(
+                builder: (BuildContext context) {
+                  final size = MediaQuery.of(context).size;
+                  final height = max(size.height * .05, 50.0);
+                  return Container(
+                    width: size.width,
+                    height: height,
+                    child: AdmobBanner(
+                      adUnitId: getBannerAdUnitId(),
+                      adSize: AdmobBannerSize.ADAPTIVE_BANNER(
+                        width: size.width.toInt(),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Expanded(child: child),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+class AdmobBannerAppBarRecipe extends StatelessWidget
+    implements PreferredSizeWidget {
+  final AppBar appBar;
+  final Size size;
+
+  const AdmobBannerAppBarRecipe({
+    Key key,
+    @required this.appBar,
+    @required this.size,
+  }) : super(key: key);
+
+  @override
+  Size get preferredSize =>
+      Size.fromHeight(appBar.preferredSize.height + height);
+
+  double get height => max(size.height * .06, 50.0);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        appBar,
+        Container(
+          width: size.width,
+          height: height,
+          child: AdmobBanner(
+            adUnitId: getBannerAdUnitId(),
+            adSize: AdmobBannerSize.ADAPTIVE_BANNER(
+              width: size.width.toInt(),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+extension AppBarAdmobX on AppBar {
+  PreferredSizeWidget withAdmobBanner(BuildContext context) {
+    return AdmobBannerAppBarRecipe(
+      appBar: this,
+      size: MediaQuery.of(context).size,
+    );
+  }
+}
+
+class MyMaterialApp extends StatefulWidget {
+  @override
+  _MyMaterialAppState createState() => _MyMaterialAppState();
+}
+
+class _MyMaterialAppState extends State<MyMaterialApp> {
   GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
   AdmobInterstitial interstitialAd;
   AdmobReward rewardAd;
@@ -103,212 +241,150 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    /// Use MaterialAdmobBannerApp to have a single instance of a banner ad, app wide.
-    /// Notice when navigating to different screens a new ad doesn't need to be reloaded
-    /// and you don't need to implement banners on multiple pages.
-    return MaterialAdmobBannerApp(
-      adUnitId: getBannerAdUnitId(), // Required
-      // bannerHeightFixed: 55, // takes priority over bannerHeightPercentage
-      bannerHeightPercentage:
-          0.05, // Default: max(window height * bannerHeightPercentage, 50.0). Never be smaller than 50.0
-      bannerIsBottom: true, // Default: true
-      // windowColor: Colors.black, // Default: theme.primaryColor
-      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-        handleEvent(event, args, 'MaterialAdmobBannerApp Banner');
-      },
-
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: Scaffold(
-        key: scaffoldState,
-        appBar: AppBar(
-          title: const Text('AdmobFlutter'),
-          actions: [
-            Builder(
-              builder: (BuildContext context) => FlatButton(
+      home: Builder(
+        builder: (BuildContext context) => Scaffold(
+          key: scaffoldState,
+          appBar: AppBar(
+            title: const Text('AdmobFlutter'),
+            actions: [
+              FlatButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       fullscreenDialog: true,
                       builder: (BuildContext context) {
-                        return BannerExample();
+                        return PushedPage();
                       },
                     ),
                   );
                 },
                 child: Text(
-                  'Open Fullscreen',
+                  'Open',
                   style: TextStyle(
                     color: Colors.white,
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: Builder(
-          builder: (BuildContext context) {
-            return Container(
-              color: Colors.blueGrey,
-              child: SizedBox(
-                height: 60,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: FlatButton(
-                        child: Text(
-                          'Show Interstitial',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () async {
-                          if (await interstitialAd.isLoaded) {
-                            interstitialAd.show();
-                          } else {
-                            showSnackBar('Interstitial ad is still loading...');
-                          }
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: FlatButton(
-                        child: Text(
-                          'Show Reward',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () async {
-                          if (await rewardAd.isLoaded) {
-                            rewardAd.show();
-                          } else {
-                            showSnackBar('Reward ad is still loading...');
-                          }
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: FlatButton(
-                        child: Text(
-                          'Banners',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                              return BannerExample();
-                            }),
-                          );
-                        },
-                      ),
-                    ),
-                    // Expanded(
-                    //   child: PopupMenuButton(
-                    //     initialValue: bannerSize,
-                    //     child: Center(
-                    //       child: Text(
-                    //         'Banner size',
-                    //         style: TextStyle(
-                    //             fontWeight: FontWeight.w500,
-                    //             color: Colors.white),
-                    //       ),
-                    //     ),
-                    //     offset: Offset(0, 20),
-                    //     onSelected: (AdmobBannerSize newSize) {
-                    //       setState(() {
-                    //         bannerSize = newSize;
-                    //       });
-                    //     },
-                    //     itemBuilder: (BuildContext context) =>
-                    //         <PopupMenuEntry<AdmobBannerSize>>[
-                    //       PopupMenuItem(
-                    //         value: AdmobBannerSize.BANNER,
-                    //         child: Text('BANNER'),
-                    //       ),
-                    //       PopupMenuItem(
-                    //         value: AdmobBannerSize.LARGE_BANNER,
-                    //         child: Text('LARGE_BANNER'),
-                    //       ),
-                    //       PopupMenuItem(
-                    //         value: AdmobBannerSize.MEDIUM_RECTANGLE,
-                    //         child: Text('MEDIUM_RECTANGLE'),
-                    //       ),
-                    //       PopupMenuItem(
-                    //         value: AdmobBannerSize.FULL_BANNER,
-                    //         child: Text('FULL_BANNER'),
-                    //       ),
-                    //       PopupMenuItem(
-                    //         value: AdmobBannerSize.LEADERBOARD,
-                    //         child: Text('LEADERBOARD'),
-                    //       ),
-                    //       PopupMenuItem(
-                    //         value: AdmobBannerSize.SMART_BANNER(context),
-                    //         child: Text('SMART_BANNER'),
-                    //       ),
-                    //       PopupMenuItem(
-                    //         value: AdmobBannerSize.ADAPTIVE_BANNER(
-                    //           width:
-                    //               MediaQuery.of(context).size.width.toInt() -
-                    //                   40, // considering EdgeInsets.all(20.0)
-                    //         ),
-                    //         child: Text('ADAPTIVE_BANNER'),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-        body: Column(
-          children: [
-            /// Another option is to fix a banner ad to the top or bottom of your content.
-            /// Notice that, similar to MaterialAdmobBannerApp, banners are not scrolling
-            /// which is a violation of admob policy.
-            ///
-            /// See: https://github.com/kmcgill88/admob_flutter/issues/194
-            /// "banner ads should not move as a user scrolls, as users may try to click on the menu but end up clicking on the ad accidentally instead. This specific implementation is against policy and we reserve the right to disable ad serving to your app."
-            ///
-            LayoutBuilder(builder: (
-              BuildContext context,
-              BoxConstraints boxConstraints,
-            ) {
-              final size = MediaQuery.of(context).size;
-              final height = max(size.height * .05, 50.0);
+              )
+            ],
+          ).withAdmobBanner(context),
+          bottomNavigationBar: Builder(
+            builder: (BuildContext context) {
               return Container(
-                width: size.width,
-                height: height,
-                child: AdmobBanner(
-                  adUnitId: getBannerAdUnitId(),
-                  adSize: AdmobBannerSize.ADAPTIVE_BANNER(
-                    width: size.width.toInt(),
+                color: Colors.blueGrey,
+                child: SizedBox(
+                  height: 60,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: FlatButton(
+                          child: Text(
+                            'Show Interstitial',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            if (await interstitialAd.isLoaded) {
+                              interstitialAd.show();
+                            } else {
+                              showSnackBar(
+                                  'Interstitial ad is still loading...');
+                            }
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: FlatButton(
+                          child: Text(
+                            'Show Reward',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            if (await rewardAd.isLoaded) {
+                              rewardAd.show();
+                            } else {
+                              showSnackBar('Reward ad is still loading...');
+                            }
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: FlatButton(
+                          child: Text(
+                            'Banners',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                return PushedPage();
+                              }),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                  listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-                    handleEvent(event, args, 'Banner');
-                  },
                 ),
               );
-            }),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.all(20.0),
-                itemCount: 5,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    height: 100.0,
-                    margin: EdgeInsets.only(bottom: 20.0),
-                    color: Colors.cyan,
-                  );
-                },
+            },
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: Scrollbar(
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(20.0),
+                    itemCount: 10,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        height: 100.0,
+                        margin: EdgeInsets.only(bottom: 20.0),
+                        color: Colors.cyan,
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-          ],
+              // Another option is to fix a banner ad to the top or bottom of your content.
+              // Notice that banners are not scrolling, which is a violation of admob policy.
+              //
+              // See: https://github.com/kmcgill88/admob_flutter/issues/194
+              // "banner ads should not move as a user scrolls, as users may try to
+              // click on the menu but end up clicking on the ad accidentally instead.
+              // This specific implementation is against policy and we reserve the right
+              // to disable ad serving to your app."
+
+              // Builder(
+              //   builder: (BuildContext context) {
+              //     final size = MediaQuery.of(context).size;
+              //     final height = max(size.height * .05, 50.0);
+              //     return Container(
+              //       width: size.width,
+              //       height: height,
+              //       child: AdmobBanner(
+              //         adUnitId: getBannerAdUnitId(),
+              //         adSize: AdmobBannerSize.ADAPTIVE_BANNER(
+              //           width: size.width.toInt(),
+              //         ),
+              //         listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+              //           handleEvent(event, args, 'Banner');
+              //         },
+              //       ),
+              //     );
+              //   },
+              // ),
+            ],
+          ),
         ),
       ),
     );
