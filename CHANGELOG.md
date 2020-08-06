@@ -1,5 +1,6 @@
 ## [1.0.0-beta.6] - TBD
 - Added some extension banner ad recipe's
+- Added page navigation to example app.
 
 ## [1.0.0-beta.5] - 2020/06/20
 - Fixed [183](https://github.com/kmcgill88/admob_flutter/issues/183) iOS Reward Ad consecutive loads
