@@ -4,7 +4,7 @@ version: 1.0.0-beta.5
 homepage: https://github.com/kmcgill88/admob_flutter
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
   flutter: ">=1.12.0 <2.0.0"
 
 dependencies:

@@ -102,6 +102,9 @@ void main() {
 - Objective-C based project cannot build
     - TL;DR - You have to enable swift support for your flutter project. See: [stackoverflow](https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter) and [123](https://github.com/kmcgill88/admob_flutter/issues/123)
 
+# Recipes
+- [AppBar Banner](https://mcgilldevtech.com/2020/08/admob-flutter-appbar-banner-recipe/)
+
 # Pull Requests
 
 I welcome and encourage all pull requests. Here are some basic rules to follow to ensure timely addition of your request:
