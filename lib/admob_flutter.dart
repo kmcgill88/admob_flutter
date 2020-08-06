@@ -5,4 +5,3 @@ export 'src/admob_banner_controller.dart';
 export 'src/admob_interstitial.dart';
 export 'src/admob_reward.dart';
 export 'src/admob_events.dart';
-export 'src/material_admob_banner_app.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
-import 'package:admob_flutter_example/extensions.dart';
+// import 'package:admob_flutter_example/extensions.dart';
 import 'package:admob_flutter_example/new_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -249,7 +249,9 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) {
-                                  return NewPage(title: 'Push Page',);
+                                  return NewPage(
+                                    title: 'Push Page',
+                                  );
                                 }),
                               );
                             },
