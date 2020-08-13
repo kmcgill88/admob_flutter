@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
-// import 'package:admob_flutter_example/extensions.dart';
+import 'package:admob_flutter_example/extensions.dart';
 import 'package:admob_flutter_example/new_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -137,7 +138,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                 ),
               )
             ],
-          ), // .withBottomAdmobBanner(context),
+          ).withBottomAdmobBanner(context),
           bottomNavigationBar: Builder(
             builder: (BuildContext context) {
               return Container(
@@ -272,35 +273,30 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                     padding: EdgeInsets.all(20.0),
                     itemCount: 1000,
                     itemBuilder: (BuildContext context, int index) {
-                      if (index != 0 && index % 6 == 0) {
-                        return Column(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(bottom: 20.0),
-                              child: AdmobBanner(
-                                adUnitId: getBannerAdUnitId(),
-                                adSize: bannerSize,
-                                listener: (AdmobAdEvent event,
-                                    Map<String, dynamic> args) {
-                                  handleEvent(event, args, 'Banner');
-                                },
-                                onBannerCreated:
-                                    (AdmobBannerController controller) {
-                                  // Dispose is called automatically for you when Flutter removes the banner from the widget tree.
-                                  // Normally you don't need to worry about disposing this yourself, it's handled.
-                                  // If you need direct access to dispose, this is your guy!
-                                  // controller.dispose();
-                                },
-                              ),
-                            ),
-                            Container(
-                              height: 100.0,
-                              margin: EdgeInsets.only(bottom: 20.0),
-                              color: Colors.cyan,
-                            ),
-                          ],
-                        );
-                      }
+                      // if (index != 0 && index % 6 == 0) {
+                      //   return Column(
+                      //     children: <Widget>[
+                      //       Container(
+                      //         margin: EdgeInsets.only(bottom: 20.0),
+                      //         child: AdmobBanner(
+                      //           adUnitId: getBannerAdUnitId(),
+                      //           adSize: bannerSize,
+                      //           listener: (AdmobAdEvent event,
+                      //               Map<String, dynamic> args) {
+                      //             handleEvent(event, args, 'Banner');
+                      //           },
+                      //           // onBannerCreated:
+                      //           //     (AdmobBannerController controller) {
+                      //           //   // Dispose is called automatically for you when Flutter removes the banner from the widget tree.
+                      //           //   // Normally you don't need to worry about disposing this yourself, it's handled.
+                      //           //   // If you need direct access to dispose, this is your guy!
+                      //           //   // controller.dispose();
+                      //           // },
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   );
+                      // }
                       return Container(
                         height: 100.0,
                         margin: EdgeInsets.only(bottom: 20.0),
@@ -342,8 +338,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
           ),
         ),
       ),
-    );
-    // .withBottomAdmobBanner(context);
+    ); // .withBottomAdmobBanner(context);
   }
 
   @override
@@ -377,6 +372,9 @@ iOS: ca-app-pub-3940256099942544/1712485313
 */
 
 String getBannerAdUnitId() {
+  if (kIsWeb) {
+    return null;
+  }
   if (Platform.isIOS) {
     return 'ca-app-pub-3940256099942544/2934735716';
   } else if (Platform.isAndroid) {
@@ -386,6 +384,9 @@ String getBannerAdUnitId() {
 }
 
 String getInterstitialAdUnitId() {
+  if (kIsWeb) {
+    return null;
+  }
   if (Platform.isIOS) {
     return 'ca-app-pub-3940256099942544/4411468910';
   } else if (Platform.isAndroid) {
@@ -395,6 +396,9 @@ String getInterstitialAdUnitId() {
 }
 
 String getRewardBasedVideoAdUnitId() {
+  if (kIsWeb) {
+    return null;
+  }
   if (Platform.isIOS) {
     return 'ca-app-pub-3940256099942544/1712485313';
   } else if (Platform.isAndroid) {

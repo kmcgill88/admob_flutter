@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:admob_flutter_example/main.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AppBarBannerRecipe extends StatelessWidget
@@ -19,7 +20,7 @@ class AppBarBannerRecipe extends StatelessWidget
   Size get preferredSize =>
       Size.fromHeight(appBar.preferredSize.height + height);
 
-  double get height => max(size.height * .06, 50.0);
+  double get height => max(size.height * .06, kIsWeb ? 100.0 : 50.0);
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +119,7 @@ class BottomBannerAdAppRecipe extends StatelessWidget {
               child: Builder(
                 builder: (BuildContext context) {
                   final size = MediaQuery.of(context).size;
-                  final height = max(size.height * .05, 50.0);
+                  final height = max(size.height * .05, kIsWeb ? 100 : 50.0);
                   return Container(
                     width: size.width,
                     height: height,
