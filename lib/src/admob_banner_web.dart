@@ -35,13 +35,13 @@ class _AdmobBannerState extends State<AdmobBanner> {
     final key1 = theKey + 'script1';
     final script1 = html.ScriptElement()
       ..type = 'text/javascript'
-      ..setAttribute('async', null)
+      ..async = true
       ..src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
 
     final key2 = theKey + 'script2';
     final script2 = html.ScriptElement()
-      ..setInnerHtml('(adsbygoogle = window.adsbygoogle || []).push({});')
-      ..setInnerHtml('console.log("adsense loaded");')
+      ..setInnerHtml(
+          '(adsbygoogle = window.adsbygoogle || []).push({});console.log("adsense loaded")')
       ..type = 'text/javascript';
 
     final foo = html.Element.tag('ins')
@@ -85,6 +85,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
     );
 
     return HtmlElementView(
+      key: _key,
       viewType: theKey,
     );
   }
