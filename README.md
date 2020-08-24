@@ -72,6 +72,7 @@ Below is an example description text:
 ```
 
 See [Prepare for iOS 14+](https://developers.google.com/admob/ios/ios14) for more information.
+You also need to update your `ios/Podfile` by adding `platform :ios, '9.0'` at the very top of your file.
 
 ### Initialize the plugin
 
