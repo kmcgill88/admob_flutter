@@ -82,11 +82,18 @@ import 'package:admob_flutter/admob_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize without device test ids
+  // Initialize without device test ids.
   Admob.initialize();
   // Or add a list of test ids.
   // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
 }
+```
+
+If you're using iOS, you may also need to request the tracking authorization in order to display personalized ads:
+
+```
+// Run this before displaying any ad.
+await Admob.requestTrackingAuthorization();
 ```
 
 ### Supported Platforms

@@ -46,6 +46,7 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
         if let args = call.arguments as? [String] {
             GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = args
         }
+	case "request_tracking_authorization":
 		if #available(iOS 14, *) {
 			ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
 				print("Tracking authorization completed. \(status)")

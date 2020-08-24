@@ -52,7 +52,6 @@ class AdmobFlutterPlugin(private val context: Context): MethodCallHandler {
             val configuration = RequestConfiguration.Builder().setTestDeviceIds(this).build()
             MobileAds.setRequestConfiguration(configuration)
         }
-		result.success(true)
       }
       "banner_size" -> {
         val args = call.arguments as HashMap<*, *>
