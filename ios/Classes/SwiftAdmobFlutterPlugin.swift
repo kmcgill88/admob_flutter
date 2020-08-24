@@ -18,6 +18,8 @@
 
 import UIKit
 import GoogleMobileAds
+import AppTrackingTransparency
+import AdSupport
 
 public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
     
@@ -44,6 +46,15 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
         if let args = call.arguments as? [String] {
             GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = args
         }
+		if #available(iOS 14, *) {
+			ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+				print("Tracking authorization completed. \(status)")
+				result(status == ATTrackingManager.AuthorizationStatus.authorized)
+			})
+		}
+		else {
+			result(true)
+		}
     case "banner_size":
         guard let args = call.arguments as? [String: Any],
             let name = args["name"] as? String,
