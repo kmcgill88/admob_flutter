@@ -92,7 +92,7 @@ void main() {
 
 If you're using iOS, you may also need to request the tracking authorization in order to display personalized ads:
 
-```
+```dart
 // Run this before displaying any ad.
 await Admob.requestTrackingAuthorization();
 ```
