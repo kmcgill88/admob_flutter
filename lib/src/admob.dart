@@ -11,10 +11,10 @@ class Admob {
   }
   
   static Future<bool> requestTrackingAuthorization() {
-	if (!Platform.isIOS) {
-		return Future.value(true);
-	}
-	return _channel.invokeMethod('request_tracking_authorization');
+	  if (!Platform.isIOS) {
+		  return Future<bool>.value(true);
+	  }
+	  return _channel.invokeMethod('request_tracking_authorization');
   }
 
   static Future<Size> bannerSize(AdmobBannerSize admobBannerSize) async {
