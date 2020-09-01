@@ -1,5 +1,7 @@
 package com.shatsy.admobflutter
 
+import android.os.Bundle
+import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
@@ -28,10 +30,17 @@ class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChanne
       "load" -> {
         val id = call.argument<Int>("id")
         val adUnitId = call.argument<String>("adUnitId")
-        val adRequest = AdRequest.Builder().build()
+
+        val adRequestBuilder = AdRequest.Builder()
+        val npa = call.argument<Boolean>("nonPersonalizedAds")
+        if(npa == true) {
+          val extras = Bundle()
+          extras.putString("npa", "1")
+          adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+        }
 
         if (allAds[id] == null) allAds[id!!] = MobileAds.getRewardedVideoAdInstance(registrar.context())
-        allAds[id]?.loadAd(adUnitId, adRequest)
+        allAds[id]?.loadAd(adUnitId, adRequestBuilder.build())
         result.success(null)
       }
       "isLoaded" -> {

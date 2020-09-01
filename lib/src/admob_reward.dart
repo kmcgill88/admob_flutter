@@ -32,7 +32,7 @@ class AdmobReward extends AdmobEventHandler {
   }
 
   void load() async {
-    await _channel.invokeMethod('load', _channelMethodsArguments);
+    await _channel.invokeMethod('load', _channelMethodsArguments..['nonPersonalizedAds'] = nonPersonalizedAds);
 
     if (listener != null) {
       await _channel.invokeMethod('setListener', _channelMethodsArguments);

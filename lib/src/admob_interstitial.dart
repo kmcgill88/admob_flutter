@@ -32,7 +32,11 @@ class AdmobInterstitial extends AdmobEventHandler {
   }
 
   void load() async {
-    await _channel.invokeMethod('load', _channelMethodsArguments..['adUnitId'] = adUnitId);
+    await _channel.invokeMethod('load',
+      _channelMethodsArguments
+        ..['adUnitId'] = adUnitId
+        ..['nonPersonalizedAds'] = nonPersonalizedAds
+    );
 
     if (listener != null) {
       await _channel.invokeMethod('setListener', _channelMethodsArguments);
