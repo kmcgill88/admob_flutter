@@ -1,4 +1,8 @@
-## [1.0.0-beta.6] - TBD
+## [1.0.0-beta.6] - 2020/08/31
+- Add [iOS 14 Support](https://github.com/kmcgill88/admob_flutter/issues/208). Thank you [Skyost](https://github.com/Skyost)!
+    - Bump iOS min version to iOS 9
+    - iOS REQUIRES Xcode 12+ to build for iOS 14
+    - Update Bitrise build machine to Xcode 12.0.x, on macOS 10.15.5 (Catalina); Flutter 1.20.2
 - Added some extension banner ad recipes
 - Added page navigation to example app.
 

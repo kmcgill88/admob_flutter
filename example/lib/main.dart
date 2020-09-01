@@ -32,7 +32,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
   void initState() {
     super.initState();
 
-	// You should execute `Admob.requestTrackingAuthorization()` here before showing any ad.
+    // You should execute `Admob.requestTrackingAuthorization()` here before showing any ad.
 
     bannerSize = AdmobBannerSize.BANNER;
 
