@@ -63,6 +63,17 @@ and add
 <true/>
 ```
 
+Starting from Beta 6, you also need to display the App Tracking Transparency authorization request for accessing the IDFA,
+so you have to update your `Info.plist` to add the `NSUserTrackingUsageDescription` key with a custom message describing your usage.
+Below is an example description text:
+```xml
+<key>NSUserTrackingUsageDescription</key>
+<string>This identifier will be used to deliver personalized ads to you.</string>
+```
+
+See [Prepare for iOS 14+](https://developers.google.com/admob/ios/ios14) for more information.
+You also need to update your `ios/Podfile` by adding `platform :ios, '9.0'` at the very top of your file.
+
 ### Initialize the plugin
 
 First thing to do before attempting to show any ads is to initialize the plugin. You can do this in the earliest starting point of your app, your `main` function:
@@ -72,11 +83,18 @@ import 'package:admob_flutter/admob_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize without device test ids
+  // Initialize without device test ids.
   Admob.initialize();
   // Or add a list of test ids.
   // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
 }
+```
+
+If you're using iOS, you may also need to request the tracking authorization in order to display personalized ads:
+
+```dart
+// Run this before displaying any ad.
+await Admob.requestTrackingAuthorization();
 ```
 
 ### Supported Platforms
