@@ -69,7 +69,16 @@ class AdmobBanner : NSObject, FlutterPlatformView {
                 flutterResult(FlutterMethodNotImplemented)
             }
         }
-        adView.load(GADRequest())
+
+        let request = GADRequest()
+
+        if ((args["nonPersonalizedAds"] as? Bool) == true) {
+            let extras = GADExtras()
+            extras.additionalParameters = ["npa": "1"]
+            request.register(extras)
+        }
+
+        adView.load(request)
 
         return adView
     }
