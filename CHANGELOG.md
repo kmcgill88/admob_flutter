@@ -1,3 +1,6 @@
+## [1.0.0-beta.7] - 2020/09/05
+- Resolve iOS 14 [Dependency issue](https://github.com/kmcgill88/admob_flutter/issues/214).
+
 ## [1.0.0-beta.6] - 2020/08/31
 - Add [iOS 14 Support](https://github.com/kmcgill88/admob_flutter/issues/208). Thank you [Skyost](https://github.com/Skyost)!
     - Bump iOS min version to iOS 9
