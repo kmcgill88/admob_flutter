@@ -119,6 +119,8 @@ await Admob.requestTrackingAuthorization();
     - TL;DR - Make sure you have the correct combination of id's per platform. See:[161](https://github.com/kmcgill88/admob_flutter/issues/161)
 - Objective-C based project cannot build
     - TL;DR - You have to enable swift support for your flutter project. See: [stackoverflow](https://stackoverflow.com/questions/52244346/how-to-enable-swift-support-for-existing-project-in-flutter) and [123](https://github.com/kmcgill88/admob_flutter/issues/123)
+- How do I manage consentement for users in the European Economic Area?
+    - Pass `nonPersonalizedAds: false` to the classes constructor (`AdmobBanner`, `AdmobInterstitial` and `AdmobReward`) in order to not display personalized ads for users who don't give their consent. A way to ask users for their consent is to use the plugin [admob_consent](https://pub.dev/packages/admob_consent). Please note that the new recommended is to use the brand new UMP SDK ([Android](https://developers.google.com/admob/ump/android/quick-start), [iOS](https://developers.google.com/admob/ump/ios/quick-start)).
 
 # Recipes
 - [AppBar Banner](https://mcgilldevtech.com/2020/08/admob-flutter-appbar-banner-recipe/)

@@ -8,6 +8,6 @@ import io.flutter.plugin.platform.PlatformViewFactory
 
 class AdmobBannerFactory(private val messenger: BinaryMessenger): PlatformViewFactory(StandardMessageCodec.INSTANCE) {
   override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
-    return AdmobBanner(context, messenger, viewId, args as HashMap<*, *>?)
+    return AdmobBanner(context, messenger, viewId, args as HashMap<*, *>)
   }
 }
