@@ -1,3 +1,7 @@
+## [1.0.0] - 2020/09/21
+- Added support for non-personalized ads. PR [215](https://github.com/kmcgill88/admob_flutter/pull/215). Thank you [Skyost](https://github.com/Skyost)!
+- **REQUIRES Xcode 12**
+
 ## [1.0.0-beta.7] - 2020/09/05
 - Resolve iOS 14 [Dependency issue](https://github.com/kmcgill88/admob_flutter/issues/214).
 
