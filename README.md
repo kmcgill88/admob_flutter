@@ -130,7 +130,9 @@ await Admob.requestTrackingAuthorization();
 I welcome and encourage all pull requests. Here are some basic rules to follow to ensure timely addition of your request:
 
 1.  Match the document style as closely as possible.
-2.  Please keep PR titles easy to read and descriptive of changes, this will make them easier to review/merge.
-3.  Pull requests _must_ be made against `master` branch for this repository.
-4.  Check for existing [issues](https://github.com/kmcgill88/admob_flutter/issues) first, before filing an issue.
-5.  Have fun!
+1.  Please keep PR titles easy to read and descriptive of changes, this will make them easier to review/merge.
+1.  Pull requests _must_ be made against `master` branch for this repository.
+1.  Check for existing [issues](https://github.com/kmcgill88/admob_flutter/issues) first, before filing an issue.
+1.  Check the [project board](https://github.com/kmcgill88/admob_flutter/projects/1), before filing an issue.
+1.  Read the [FAQ](https://github.com/kmcgill88/admob_flutter#faq), before filing an issue.
+1.  Have fun!
