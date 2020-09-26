@@ -1,29 +1,39 @@
 package com.shatsy.admobflutter
 
 import android.content.Context
+import android.os.Bundle
 import android.view.View
+import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.platform.PlatformView
 
-class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: HashMap<*, *>?) : PlatformView, MethodCallHandler {
+
+class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: HashMap<*, *>) : PlatformView, MethodCallHandler {
   private val channel: MethodChannel = MethodChannel(messenger, "admob_flutter/banner_$id")
   private val adView: AdView = AdView(context)
 
   init {
     channel.setMethodCallHandler(this)
 
-    adView.adSize = getSize(context, args?.get("adSize") as HashMap<*, *>)
-    adView.adUnitId = args?.get("adUnitId") as String?
+    adView.adSize = getSize(context, args["adSize"] as HashMap<*, *>)
+    adView.adUnitId = args["adUnitId"] as String?
 
-    val adRequest = AdRequest.Builder().build()
-    adView.loadAd(adRequest)
+    val adRequestBuilder = AdRequest.Builder()
+    val npa: Boolean? = args["nonPersonalizedAds"] as Boolean?
+    if(npa == true) {
+      val extras = Bundle()
+      extras.putString("npa", "1")
+      adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+    }
+
+    adView.loadAd(adRequestBuilder.build())
   }
 
   private fun getSize(context: Context, size: HashMap<*, *>) : AdSize {

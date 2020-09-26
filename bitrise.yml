@@ -13,7 +13,7 @@ workflows:
     - git-clone@4.0: {}
     - flutter-installer@0.11:
         inputs:
-        - version: 1.17.1
+        - version: 1.20.0
     - script@1.1:
         inputs:
         - content: |-

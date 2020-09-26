@@ -54,7 +54,7 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
             break
         case "load":
             allIds[id] = getInterstitialAd(id: id, interstantialAdUnitId: adUnitId)
-            loadInterstantialAd(id: id, interstantialAdUnitId: adUnitId)
+            loadInterstantialAd(id: id, interstantialAdUnitId: adUnitId, nonPersonalizedAds: (args["nonPersonalizedAds"] as? Bool) ?? false)
             result(nil)
             break
         case "isLoaded":
@@ -78,9 +78,16 @@ public class AdmobIntersitialPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    private func loadInterstantialAd(id: Int, interstantialAdUnitId: String) {
+    private func loadInterstantialAd(id: Int, interstantialAdUnitId: String, nonPersonalizedAds: Bool) {
         let interstantial = getInterstitialAd(id: id, interstantialAdUnitId: interstantialAdUnitId)
         let request = GADRequest()
+
+        if (nonPersonalizedAds) {
+            let extras = GADExtras()
+            extras.additionalParameters = ["npa": "1"]
+            request.register(extras)
+        }
+
         interstantial.load(request)
     }
     

@@ -60,7 +60,7 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
             delegates[id] = AdmobRewardPluginDelegate(channel: channel)
             break
         case "load":
-            loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId)
+            loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId, nonPersonalizedAds: (args["nonPersonalizedAds"] as? Bool) ?? false)
             result(nil)
             break
         case "isLoaded":
@@ -88,10 +88,17 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    private func loadRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String) {
+    private func loadRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String, nonPersonalizedAds: Bool) {
         let video = GADRewardedAd(adUnitID: rewardBasedVideoAdUnitId)
         rewardAds[id] = video
         let request = GADRequest()
+
+        if (nonPersonalizedAds) {
+            let extras = GADExtras()
+            extras.additionalParameters = ["npa": "1"]
+            request.register(extras)
+        }
+
         video.load(request) { [weak self] error in
             if let error = error {
                 // Handle ad failed to load case.
