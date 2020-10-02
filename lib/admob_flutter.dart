@@ -5,3 +5,6 @@ export 'src/admob_banner_controller.dart';
 export 'src/admob_interstitial.dart';
 export 'src/admob_reward.dart';
 export 'src/admob_events.dart';
+export 'src/admob_events.dart';
+export 'src/admanager_banner.dart';
+export 'src/admanager_banner_controller.dart';
