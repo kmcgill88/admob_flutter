@@ -19,66 +19,74 @@ import io.flutter.plugin.platform.PlatformView
 
 
 class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: HashMap<*, *>) : PlatformView, MethodCallHandler {
-  private val channel: MethodChannel = MethodChannel(messenger, "admob_flutter/banner_$id")
-  private val adView: PublisherAdView = PublisherAdView(context)
+    private val channel: MethodChannel = MethodChannel(messenger, "admob_flutter/banner_$id")
+    private val adView: PublisherAdView = PublisherAdView(context)
 
-  init {
-    channel.setMethodCallHandler(this)
-    adView.setAdSizes(getSize(context, args?.get("adSize") as HashMap<*, *>))
-    adView.adUnitId = args?.get("adUnitId") as String?
-    adView.appEventListener = AppEventListener { name, data ->
-        channel.invokeMethod("appEvent", hashMapOf("name" to name, "data" to data))
-    }
-    val npa: Boolean? = args?.get("nonPersonalizedAds") as Boolean?
-    adView.loadAd(publisherAdRequest(args?.get("targetInfo") as HashMap<*, *>,npa))
-  }
-
-  private fun publisherAdRequest(targetInfo: HashMap<*, *>, npa: Boolean?): PublisherAdRequest {
-      val adRequestBuilder = PublisherAdRequest.Builder()
-      if(npa == true) {
-      val extras = Bundle()
-      extras.putString("npa", "1")
-      adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-      }
-      if(targetInfo.isNotEmpty()){
-        targetInfo.forEach {
-            (key, value) -> adRequestBuilder.addCustomTargeting(key as String, value.toString())
+    init {
+        channel.setMethodCallHandler(this)
+        adView.setAdSizes(getSize(context, args?.get("adSize") as HashMap<*, *>))
+        adView.adUnitId = args?.get("adUnitId") as String?
+        adView.appEventListener = AppEventListener { name, data ->
+            channel.invokeMethod("appEvent", hashMapOf("name" to name, "data" to data))
         }
-      }
-      return adRequestBuilder.build()
-  }
-  private fun getSize(context: Context, size: HashMap<*, *>) : AdSize {
-    val width = size["width"] as Int
-    val height = size["height"] as Int
-    val name = size["name"] as String
+        val npa: Boolean? = args?.get("nonPersonalizedAds") as Boolean?
+        val contentUrl: String? = args?.get("contentUrl") as String?
 
-    return when(name) {
-      "BANNER" -> AdSize.BANNER
-      "LARGE_BANNER" -> AdSize.LARGE_BANNER
-      "MEDIUM_RECTANGLE" -> AdSize.MEDIUM_RECTANGLE
-      "FULL_BANNER" -> AdSize.FULL_BANNER
-      "LEADERBOARD" -> AdSize.LEADERBOARD
-      "SMART_BANNER" -> AdSize.SMART_BANNER
-      "ADAPTIVE_BANNER" -> AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width)
-      else -> AdSize(width, height)
+        adView.loadAd(publisherAdRequest(args?.get("targetInfo") as HashMap<*, *>, npa, contentUrl))
+
     }
-  }
 
-  override fun getView(): View {
-    return adView
-  }
+    private fun publisherAdRequest(targetInfo: HashMap<*, *>, npa: Boolean?, contentUrl: String?): PublisherAdRequest {
+        val adRequestBuilder = PublisherAdRequest.Builder()
+        if (npa == true) {
+            val extras = Bundle()
+            extras.putString("npa", "1")
+            adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+        }
 
-  override fun onMethodCall(call: MethodCall, result: Result) {
-    when(call.method) {
-      "setListener" -> adView.adListener = createAdListener(channel)
-      "dispose" -> dispose()
-      else -> result.notImplemented()
+        if (contentUrl != null && contentUrl.isNotBlank()) {
+            adRequestBuilder.setContentUrl(contentUrl)
+        }
+
+        if (targetInfo.isNotEmpty()) {
+            targetInfo.forEach { (key, value) ->
+                adRequestBuilder.addCustomTargeting(key as String, value.toString())
+            }
+        }
+        return adRequestBuilder.build()
     }
-  }
 
-  override fun dispose() {
-    adView.visibility = View.GONE
-    adView.destroy()
-    channel.setMethodCallHandler(null)
-  }
+    private fun getSize(context: Context, size: HashMap<*, *>): AdSize {
+        val width = size["width"] as Int
+        val height = size["height"] as Int
+
+        return when (size["name"] as String) {
+            "BANNER" -> AdSize.BANNER
+            "LARGE_BANNER" -> AdSize.LARGE_BANNER
+            "MEDIUM_RECTANGLE" -> AdSize.MEDIUM_RECTANGLE
+            "FULL_BANNER" -> AdSize.FULL_BANNER
+            "LEADERBOARD" -> AdSize.LEADERBOARD
+            "SMART_BANNER" -> AdSize.SMART_BANNER
+            "ADAPTIVE_BANNER" -> AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width)
+            else -> AdSize(width, height)
+        }
+    }
+
+    override fun getView(): View {
+        return adView
+    }
+
+    override fun onMethodCall(call: MethodCall, result: Result) {
+        when (call.method) {
+            "setListener" -> adView.adListener = createAdListener(channel)
+            "dispose" -> dispose()
+            else -> result.notImplemented()
+        }
+    }
+
+    override fun dispose() {
+        adView.visibility = View.GONE
+        adView.destroy()
+        channel.setMethodCallHandler(null)
+    }
 }
