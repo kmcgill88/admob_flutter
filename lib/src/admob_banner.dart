@@ -12,6 +12,8 @@ class AdmobBanner extends StatefulWidget {
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final void Function(AdmobBannerController) onBannerCreated;
   final Map<String, dynamic> targetInfo;
+  final bool nonPersonalizedAds;
+
   AdmobBanner({
     Key key,
     @required this.adUnitId,
@@ -19,6 +21,7 @@ class AdmobBanner extends StatefulWidget {
     this.listener,
     this.onBannerCreated,
     this.targetInfo = const {},
+    this.nonPersonalizedAds = false,
   }) : super(key: key);
 
   @override
@@ -60,11 +63,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
             child: AndroidView(
               key: _key,
               viewType: 'admob_flutter/banner',
-              creationParams: <String, dynamic>{
-                'adUnitId': widget.adUnitId,
-                'targetInfo': widget.targetInfo,
-                'adSize': widget.adSize.toMap,
-              },
+              creationParams: bannerCreationParams,
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,
             ),
@@ -75,11 +74,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
             child: UiKitView(
               key: _key,
               viewType: 'admob_flutter/banner',
-              creationParams: <String, dynamic>{
-                'adUnitId': widget.adUnitId,
-                'targetInfo': widget.targetInfo,
-                'adSize': widget.adSize.toMap,
-              },
+              creationParams: bannerCreationParams,
               creationParamsCodec: const StandardMessageCodec(),
               onPlatformViewCreated: _onPlatformViewCreated,
             ),
@@ -99,4 +94,11 @@ class _AdmobBannerState extends State<AdmobBanner> {
       widget.onBannerCreated(_controller);
     }
   }
+
+  Map<String, dynamic> get bannerCreationParams => <String, dynamic>{
+        'adUnitId': widget.adUnitId,
+        'adSize': widget.adSize.toMap,
+        'targetInfo': widget.targetInfo,
+        'nonPersonalizedAds': widget.nonPersonalizedAds,
+      };
 }

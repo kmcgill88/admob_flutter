@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:admob_flutter/admob_flutter.dart';
@@ -7,6 +8,13 @@ class Admob {
 
   Admob.initialize({List<String> testDeviceIds}) {
     _channel.invokeMethod('initialize', testDeviceIds);
+  }
+  
+  static Future<bool> requestTrackingAuthorization() {
+	  if (!Platform.isIOS) {
+		  return Future<bool>.value(true);
+	  }
+	  return _channel.invokeMethod('request_tracking_authorization');
   }
 
   static Future<Size> bannerSize(AdmobBannerSize admobBannerSize) async {
