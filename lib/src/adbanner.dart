@@ -9,7 +9,7 @@ abstract class AdBanner extends StatelessWidget {
   final Map<String, dynamic> targetInfo;
   final bool nonPersonalizedAds;
   final UniqueKey _key = UniqueKey();
-
+  final String contentUrl;
   String get viewType;
   void onPlatformViewCreated(int id);
 
@@ -18,6 +18,7 @@ abstract class AdBanner extends StatelessWidget {
     @required this.adUnitId,
     @required this.adSize,
     this.targetInfo,
+    this.contentUrl,
     this.nonPersonalizedAds,
   }) : super(key: key);
 
@@ -63,5 +64,6 @@ abstract class AdBanner extends StatelessWidget {
         'adSize': adSize.toMap,
         'targetInfo': targetInfo,
         'nonPersonalizedAds': nonPersonalizedAds,
+        'contentUrl': contentUrl,
       };
 }

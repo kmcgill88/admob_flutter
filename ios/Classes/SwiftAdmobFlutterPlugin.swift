@@ -33,6 +33,10 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
         AdmobBannerFactory(messeneger: registrar.messenger()),
         withId: "admob_flutter/banner"
     )
+    registrar.register(
+        AdmanagerBannerFactory(messeneger: registrar.messenger()),
+        withId: "admob_flutter/admanager_banner"
+    )
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {

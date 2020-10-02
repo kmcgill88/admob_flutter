@@ -14,11 +14,13 @@ class AdmobBanner extends AdBanner {
     @required String adUnitId,
     @required AdmobBannerSize adSize,
     bool nonPersonalizedAds = false,
+    String contentUrl,
     this.onBannerCreated,
     this.listener,
   }) : super(
           key: key,
           adUnitId: adUnitId,
+          contentUrl: contentUrl,
           adSize: adSize,
           nonPersonalizedAds: nonPersonalizedAds,
         );

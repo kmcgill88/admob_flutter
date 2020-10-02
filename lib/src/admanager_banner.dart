@@ -16,6 +16,7 @@ class AdmanagerBanner extends AdBanner {
     @required AdmobBannerSize adSize,
     bool nonPersonalizedAds = false,
     Map<String, dynamic> targetInfo = const {},
+    String contentUrl,
     this.onBannerCreated,
     this.listener,
   }) : super(
@@ -23,6 +24,7 @@ class AdmanagerBanner extends AdBanner {
           adUnitId: adUnitId,
           adSize: adSize,
           nonPersonalizedAds: nonPersonalizedAds,
+          contentUrl: contentUrl,
           targetInfo: targetInfo,
         );
 
