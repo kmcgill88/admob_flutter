@@ -13,7 +13,6 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="admob_flutter_example"
         android:icon="@mipmap/ic_launcher">
 
@@ -22,7 +21,7 @@
             android:value="ca-app-pub-3940256099942544~3347511713"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name="io.flutter.embedding.android.FlutterActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
@@ -32,13 +31,18 @@
                  until Flutter renders its first frame. It can be removed if
                  there is no splash screen (such as the default splash screen
                  defined in @style/LaunchTheme). -->
-            <meta-data 
-                android:name="flutterEmbedding"
-                android:value="2" />
+             <meta-data
+                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+                android:resource="@drawable/launch_background" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <meta-data 
+            android:name="flutterEmbedding"
+            android:value="2" />
+
     </application>
 </manifest>
