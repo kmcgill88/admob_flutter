@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -39,4 +40,11 @@ class AdmobBannerSize {
         'height': height,
         'name': name,
       };
+
+  Future<Size> get futureSize => hasFixedSize
+      ? Future.value(Size(
+          width.toDouble(),
+          height.toDouble(),
+        ))
+      : Admob.bannerSize(this);
 }
