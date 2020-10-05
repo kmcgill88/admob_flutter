@@ -27,7 +27,6 @@ class Banner : NSObject, FlutterPlatformView {
     private let frame: CGRect
     private let viewId: Int64
     private let args: [String: Any]
-    private var adView: GADBannerView?
 
     init(frame: CGRect, viewId: Int64, args: [String: Any], messeneger: FlutterBinaryMessenger, viewName: String) {
         self.args = args
@@ -41,52 +40,41 @@ class Banner : NSObject, FlutterPlatformView {
         return getOrSetupBannerAdView()
     }
 
-    private func dispose() {
-        adView?.removeFromSuperview()
-        adView = nil
+    func dispose() {
         channel.setMethodCallHandler(nil)
     }
     
-    private func getOrSetupBannerAdView() -> GADBannerView {
-        if let adView = adView {
-            return adView
-        }
-
-        let adView = GADBannerView(adSize: adSize)
-        self.adView = adView
-        adView.rootViewController = UIApplication.shared.keyWindow?.rootViewController
-        adView.frame = frame.width == 0 ? CGRect(x: 0, y: 0, width: 1, height: 1) : frame
-        
-        // Defaults to test Id's from: https://developers.google.com/admob/ios/banner
-        adView.adUnitID = args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/2934735716"
-        channel.setMethodCallHandler { [weak self] (flutterMethodCall: FlutterMethodCall, flutterResult: FlutterResult) in
-            switch flutterMethodCall.method {
-            case "setListener":
-                self?.adView?.delegate = self
-            case "dispose":
-                self?.dispose()
-            default:
-                flutterResult(FlutterMethodNotImplemented)
-            }
-        }
-
-        let request = GADRequest()
-
-        if ((args["nonPersonalizedAds"] as? Bool) == true) {
+    func getOrSetupBannerAdView() -> GADBannerView {
+        // Override me
+        return GADBannerView()
+    }
+    func configureRequest(request:GADRequest){
+        if ( (args["nonPersonalizedAds"] as? Bool) == true) {
             let extras = GADExtras()
             extras.additionalParameters = ["npa": "1"]
             request.register(extras)
         }
-        if ((args["contentUrl"] as? String) != nil) {
-            let contentURL = (args["contentUrl"] as? String)
-            if(!(contentURL?.isEmpty ?? true)){
-                request.contentURL = contentURL
+        let contentURL = args["contentUrl"] as? String ?? ""
+        if(!contentURL.isEmpty){
+            request.contentURL = contentURL
+        }
+    }
+    func configureAdView(adView: GADBannerView, context:Banner){
+        adView.rootViewController = UIApplication.shared.keyWindow?.rootViewController
+        adView.frame = frame.width == 0 ? CGRect(x: 0, y: 0, width: 1, height: 1) : frame
+        adView.adUnitID = getAdUnit()
+        
+        channel.setMethodCallHandler { (flutterMethodCall: FlutterMethodCall, flutterResult: FlutterResult) in
+            switch flutterMethodCall.method {
+            case "setListener":
+                adView.delegate = context
+            case "dispose":
+                context.dispose()
+            default:
+                flutterResult(FlutterMethodNotImplemented)
             }
         }
-
-        adView.load(request)
-
-        return adView
+        
     }
     
     private var adSize: GADAdSize {
@@ -107,6 +95,8 @@ class Banner : NSObject, FlutterPlatformView {
                 return kGADAdSizeFullBanner
             case "LEADERBOARD":
                 return kGADAdSizeLeaderboard
+            case "PIXEL":
+                return GADAdSizeFromCGSize(CGSize(width: 1.0, height: 1.0))
             case "SMART_BANNER":
                 // TODO: Do we need Landscape too?
                 return kGADAdSizeSmartBannerPortrait
@@ -117,15 +107,37 @@ class Banner : NSObject, FlutterPlatformView {
                 break
             }
         }
-
+        
         let width = size["width"] as? Int ?? 0
         let height = size["height"] as? Int ?? 0
         return GADAdSize(size: CGSize(width: width, height: height), flags: 0)
     }
+    
+    func getAdSize() -> GADAdSize{
+        return adSize
+    }
+    func getAdUnit() -> String {
+        // Defaults to test Id's from: https://developers.google.com/admob/ios/banner
+        return args["adUnitId"] as? String ?? "ca-app-pub-3940256099942544/2934735716"
+    }
+    func getTargetInfo() -> [String: Any] {
+        var dict = [String: Any]()
+        if(args["targetInfo"] != nil){
+            let target = args["targetInfo"] as! [String:Any]
+            for (key, value) in target {
+                dict[key] = value
+            }
+        }
+        return dict
+    }
+    func getChannel() -> FlutterMethodChannel {
+        return channel
+    }
+    
 }
 
 extension Banner : GADBannerViewDelegate {
-    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
+    func adViewDidReceiveAd(_ bannerView: GADBannerView) {        
         channel.invokeMethod("loaded", arguments: nil)
     }
     
