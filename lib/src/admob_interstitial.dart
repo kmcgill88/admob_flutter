@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
@@ -25,6 +26,10 @@ class AdmobInterstitial extends AdmobEventHandler {
       _adChannel.setMethodCallHandler(handleEvent);
     }
   }
+
+  static final String testAdUnitId = Platform.isAndroid
+	? 'ca-app-pub-3940256099942544/1033173712'
+	: 'ca-app-pub-3940256099942544/4411468910';
 
   Future<bool> get isLoaded async {
     final result = await _channel.invokeMethod('isLoaded', _channelMethodsArguments);

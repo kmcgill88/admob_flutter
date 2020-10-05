@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +23,10 @@ class AdmobBanner extends StatefulWidget {
     this.onBannerCreated,
     this.nonPersonalizedAds = false,
   }) : super(key: key);
+
+  static final String testAdUnitId = Platform.isAndroid
+	? 'ca-app-pub-3940256099942544/6300978111'
+	: 'ca-app-pub-3940256099942544/2934735716';
 
   @override
   _AdmobBannerState createState() => _AdmobBannerState();
