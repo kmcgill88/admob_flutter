@@ -20,7 +20,26 @@ import Foundation
 import GoogleMobileAds
 
 class AdmobBanner : Banner {
+    private var adView: GADBannerView?
     init(frame: CGRect, viewId: Int64, args: [String: Any], messeneger: FlutterBinaryMessenger) {
         super.init(frame: frame, viewId: viewId, args: args, messeneger: messeneger,viewName: "admob_flutter/banner")
     }
+    override func getOrSetupBannerAdView() -> GADBannerView {
+        if let adView = adView {
+            return adView
+        }
+        let adView = GADBannerView(adSize: getAdSize())
+        self.adView = adView
+        configureAdView(adView: adView, context: self)
+        let request = GADRequest()
+        configureRequest(request:request)
+        adView.load(request)
+        return adView
+    }
+    override func dispose() {
+        adView?.removeFromSuperview()
+        adView = nil
+        super.dispose()
+    }
+    
 }
