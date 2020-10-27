@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
@@ -23,6 +24,16 @@ class AdmobInterstitial extends AdmobEventHandler {
     if (listener != null) {
       _adChannel = MethodChannel('admob_flutter/interstitial_$id');
       _adChannel.setMethodCallHandler(handleEvent);
+    }
+  }
+
+  static String get testAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3940256099942544/1033173712';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/4411468910';
+    } else {
+      throw UnsupportedError('Unsupported platform');
     }
   }
 
