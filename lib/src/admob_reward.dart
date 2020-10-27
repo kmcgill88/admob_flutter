@@ -27,9 +27,15 @@ class AdmobReward extends AdmobEventHandler {
     }
   }
 
-  static final String testAdUnitId = Platform.isAndroid
-	? 'ca-app-pub-3940256099942544/5224354917'
-	: 'ca-app-pub-3940256099942544/1712485313';
+  static String get testAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3940256099942544/5224354917';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/1712485313';
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
 
   Future<bool> get isLoaded async {
     final result = await _channel.invokeMethod('isLoaded', _channelMethodsArguments);

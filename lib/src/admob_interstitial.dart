@@ -27,9 +27,15 @@ class AdmobInterstitial extends AdmobEventHandler {
     }
   }
 
-  static final String testAdUnitId = Platform.isAndroid
-	? 'ca-app-pub-3940256099942544/1033173712'
-	: 'ca-app-pub-3940256099942544/4411468910';
+  static String get testAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3940256099942544/1033173712';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/4411468910';
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
 
   Future<bool> get isLoaded async {
     final result = await _channel.invokeMethod('isLoaded', _channelMethodsArguments);
