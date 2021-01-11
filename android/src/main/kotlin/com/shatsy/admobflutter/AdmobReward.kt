@@ -30,7 +30,8 @@ class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChanne
       "load" -> {
         val id = call.argument<Int>("id")
         val adUnitId = call.argument<String>("adUnitId")
-
+        val customData = call.argument<String>("customData")
+        val userId = call.argument<String>("userId")
         val adRequestBuilder = AdRequest.Builder()
         val npa = call.argument<Boolean>("nonPersonalizedAds")
         if(npa == true) {
@@ -38,6 +39,9 @@ class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChanne
           extras.putString("npa", "1")
           adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
         }
+
+        allAds[id]?.customData =customData
+        allAds[id]?.userId = userId
 
         if (allAds[id] == null) allAds[id!!] = MobileAds.getRewardedVideoAdInstance(registrar.context())
         allAds[id]?.loadAd(adUnitId, adRequestBuilder.build())
