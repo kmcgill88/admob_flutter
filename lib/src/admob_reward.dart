@@ -18,7 +18,7 @@ class AdmobReward extends AdmobEventHandler {
   final String userId;
 
   AdmobReward({
-    @required this.adUnitId,
+    this.adUnitId,
     this.listener,
     this.nonPersonalizedAds = false,
     this.customData,
