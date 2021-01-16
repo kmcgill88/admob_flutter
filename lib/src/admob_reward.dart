@@ -11,10 +11,10 @@ class AdmobReward extends AdmobEventHandler {
 
   int id;
   MethodChannel _adChannel;
-  final String adUnitId;
+  String adUnitId;
   final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
   final bool nonPersonalizedAds;
-  final String customData;
+  String customData;
   final String userId;
 
   AdmobReward({
