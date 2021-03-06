@@ -10,3 +10,4 @@ build/
 example/ios/Flutter/flutter_export_environment.sh
 .vscode
 example/.flutter-plugins-dependencies
+example/ios/Flutter/Flutter.podspec

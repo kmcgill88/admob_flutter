@@ -87,7 +87,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                 ),
               ),
               onWillPop: () async {
-                scaffoldState.currentState.hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 return true;
               },
             );
@@ -99,7 +99,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
   }
 
   void showSnackBar(String content) {
-    scaffoldState.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(content),
         duration: Duration(milliseconds: 1500),
@@ -120,7 +120,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
           appBar: AppBar(
             title: const Text('AdmobFlutter'),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -152,7 +152,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
-                          child: FlatButton(
+                          child: TextButton(
                             child: Text(
                               'Show Interstitial',
                               style: TextStyle(color: Colors.white),
@@ -165,13 +165,10 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                                     'Interstitial ad is still loading...');
                               }
                             },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
                           ),
                         ),
                         Expanded(
-                          child: FlatButton(
+                          child: TextButton(
                             child: Text(
                               'Show Reward',
                               style: TextStyle(color: Colors.white),
@@ -242,7 +239,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                           ),
                         ),
                         Expanded(
-                          child: FlatButton(
+                          child: TextButton(
                             child: Text(
                               'Push Page',
                               style: TextStyle(color: Colors.white),
