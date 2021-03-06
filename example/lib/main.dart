@@ -24,9 +24,9 @@ class MyMaterialApp extends StatefulWidget {
 
 class _MyMaterialAppState extends State<MyMaterialApp> {
   GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
-  AdmobBannerSize bannerSize;
-  AdmobInterstitial interstitialAd;
-  AdmobReward rewardAd;
+  AdmobBannerSize? bannerSize;
+  late AdmobInterstitial interstitialAd;
+  late AdmobReward rewardAd;
 
   @override
   void initState() {
@@ -37,16 +37,16 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
     bannerSize = AdmobBannerSize.BANNER;
 
     interstitialAd = AdmobInterstitial(
-      adUnitId: getInterstitialAdUnitId(),
-      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+      adUnitId: getInterstitialAdUnitId()!,
+      listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
         if (event == AdmobAdEvent.closed) interstitialAd.load();
         handleEvent(event, args, 'Interstitial');
       },
     );
 
     rewardAd = AdmobReward(
-      adUnitId: getRewardBasedVideoAdUnitId(),
-      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+      adUnitId: getRewardBasedVideoAdUnitId()!,
+      listener: (AdmobAdEvent event, Map<String, dynamic>? args) {
         if (event == AdmobAdEvent.closed) rewardAd.load();
         handleEvent(event, args, 'Reward');
       },
@@ -57,7 +57,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
   }
 
   void handleEvent(
-      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+      AdmobAdEvent event, Map<String, dynamic>? args, String adType) {
     switch (event) {
       case AdmobAdEvent.loaded:
         showSnackBar('New Admob $adType Ad loaded!');
@@ -73,23 +73,23 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
         break;
       case AdmobAdEvent.rewarded:
         showDialog(
-          context: scaffoldState.currentContext,
+          context: scaffoldState.currentContext!,
           builder: (BuildContext context) {
             return WillPopScope(
+              onWillPop: () async {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                return true;
+              },
               child: AlertDialog(
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text('Reward callback fired. Thanks Andrew!'),
-                    Text('Type: ${args['type']}'),
+                    Text('Type: ${args!['type']}'),
                     Text('Amount: ${args['amount']}'),
                   ],
                 ),
               ),
-              onWillPop: () async {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                return true;
-              },
             );
           },
         );
@@ -153,26 +153,22 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                       children: <Widget>[
                         Expanded(
                           child: TextButton(
-                            child: Text(
-                              'Show Interstitial',
-                              style: TextStyle(color: Colors.white),
-                            ),
                             onPressed: () async {
-                              if (await interstitialAd.isLoaded) {
+                              if (await (interstitialAd.isLoaded as Future<bool>)) {
                                 interstitialAd.show();
                               } else {
                                 showSnackBar(
                                     'Interstitial ad is still loading...');
                               }
                             },
+                            child: Text(
+                              'Show Interstitial',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                         Expanded(
                           child: TextButton(
-                            child: Text(
-                              'Show Reward',
-                              style: TextStyle(color: Colors.white),
-                            ),
                             onPressed: () async {
                               if (await rewardAd.isLoaded) {
                                 rewardAd.show();
@@ -180,19 +176,15 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                                 showSnackBar('Reward ad is still loading...');
                               }
                             },
+                            child: Text(
+                              'Show Reward',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                         Expanded(
                           child: PopupMenuButton(
                             initialValue: bannerSize,
-                            child: Center(
-                              child: Text(
-                                'Banner size',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
                             offset: Offset(0, 20),
                             onSelected: (AdmobBannerSize newSize) {
                               setState(() {
@@ -236,14 +228,18 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                                 child: Text('ADAPTIVE_BANNER'),
                               ),
                             ],
+                            child: Center(
+                              child: Text(
+                                'Banner size',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
+                            ),
                           ),
                         ),
                         Expanded(
                           child: TextButton(
-                            child: Text(
-                              'Push Page',
-                              style: TextStyle(color: Colors.white),
-                            ),
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -254,6 +250,10 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                                 }),
                               );
                             },
+                            child: Text(
+                              'Push Page',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ],
@@ -277,10 +277,10 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                             Container(
                               margin: EdgeInsets.only(bottom: 20.0),
                               child: AdmobBanner(
-                                adUnitId: getBannerAdUnitId(),
-                                adSize: bannerSize,
+                                adUnitId: getBannerAdUnitId()!,
+                                adSize: bannerSize!,
                                 listener: (AdmobAdEvent event,
-                                    Map<String, dynamic> args) {
+                                    Map<String, dynamic>? args) {
                                   handleEvent(event, args, 'Banner');
                                 },
                                 onBannerCreated:
@@ -375,7 +375,7 @@ Android: ca-app-pub-3940256099942544/5224354917
 iOS: ca-app-pub-3940256099942544/1712485313
 */
 
-String getBannerAdUnitId() {
+String? getBannerAdUnitId() {
   if (Platform.isIOS) {
     return 'ca-app-pub-3940256099942544/2934735716';
   } else if (Platform.isAndroid) {
@@ -384,7 +384,7 @@ String getBannerAdUnitId() {
   return null;
 }
 
-String getInterstitialAdUnitId() {
+String? getInterstitialAdUnitId() {
   if (Platform.isIOS) {
     return 'ca-app-pub-3940256099942544/4411468910';
   } else if (Platform.isAndroid) {
@@ -393,7 +393,7 @@ String getInterstitialAdUnitId() {
   return null;
 }
 
-String getRewardBasedVideoAdUnitId() {
+String? getRewardBasedVideoAdUnitId() {
   if (Platform.isIOS) {
     return 'ca-app-pub-3940256099942544/1712485313';
   } else if (Platform.isAndroid) {
