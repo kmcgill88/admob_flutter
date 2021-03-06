@@ -1,3 +1,8 @@
+## [2.0.0-nullsafety.0] - 2021/03/06
+- Migrate to null saftey!
+- Update example to null saftey!
+- Update Bitrise build machine to Xcode 12.5.x, on macOS 11.2 (Big Sur); Flutter 2.0.0
+
 ## [1.0.1] - 2020/10/27
 - Added testAdUnitId getter for Banner, Interstitial and Reward ads. PR[227](https://github.com/kmcgill88/admob_flutter/pull/227). Thank you [DoctorJohn](https://github.com/DoctorJohn)!
 - Fixes typo in README.md PR[224](https://github.com/kmcgill88/admob_flutter/pull/224). Thank you [Skyost](https://github.com/Skyost)!
