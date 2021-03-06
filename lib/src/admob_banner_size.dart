@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 class AdmobBannerSize {
   final int width, height;
-  final String name;
+  final String? name;
 
   static const AdmobBannerSize BANNER =
       AdmobBannerSize(width: 320, height: 50, name: 'BANNER');
@@ -17,12 +16,12 @@ class AdmobBannerSize {
       AdmobBannerSize(width: 728, height: 90, name: 'LEADERBOARD');
   AdmobBannerSize.SMART_BANNER(BuildContext context):
         width = MediaQuery.of(context).size.width.toInt(), height = -2, name = 'SMART_BANNER';
-  AdmobBannerSize.ADAPTIVE_BANNER({@required int width}):
+  AdmobBannerSize.ADAPTIVE_BANNER({required int width}):
       width = width, height = -2, name = 'ADAPTIVE_BANNER';
 
   const AdmobBannerSize({
-    @required this.width,
-    @required this.height,
+    required this.width,
+    required this.height,
     this.name,
   });
 

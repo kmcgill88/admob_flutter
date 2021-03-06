@@ -6,47 +6,48 @@ import 'admob_events.dart';
 export 'admob_events.dart';
 
 abstract class AdmobEventHandler {
-  final Function(AdmobAdEvent, Map<String, dynamic>) _listener;
+  final Function(AdmobAdEvent, Map<String, dynamic>?)? _listener;
 
-  AdmobEventHandler(Function(AdmobAdEvent, Map<String, dynamic>) listener)
+  AdmobEventHandler(Function(AdmobAdEvent, Map<String, dynamic>?)? listener)
       : _listener = listener;
 
-  Future<dynamic> handleEvent(MethodCall call) async {
+  Future<void> handleEvent(MethodCall call) async {
+    if (_listener == null) {
+      return;
+    }
     switch (call.method) {
       case 'loaded':
-        _listener(AdmobAdEvent.loaded, null);
+        _listener!(AdmobAdEvent.loaded, null);
         break;
       case 'failedToLoad':
-        _listener(AdmobAdEvent.failedToLoad,
+        _listener!(AdmobAdEvent.failedToLoad,
             Map<String, dynamic>.from(call.arguments));
         break;
       case 'clicked':
-        _listener(AdmobAdEvent.clicked, null);
+        _listener!(AdmobAdEvent.clicked, null);
         break;
       case 'impression':
-        _listener(AdmobAdEvent.impression, null);
+        _listener!(AdmobAdEvent.impression, null);
         break;
       case 'opened':
-        _listener(AdmobAdEvent.opened, null);
+        _listener!(AdmobAdEvent.opened, null);
         break;
       case 'leftApplication':
-        _listener(AdmobAdEvent.leftApplication, null);
+        _listener!(AdmobAdEvent.leftApplication, null);
         break;
       case 'closed':
-        _listener(AdmobAdEvent.closed, null);
+        _listener!(AdmobAdEvent.closed, null);
         break;
       case 'completed':
-        _listener(AdmobAdEvent.completed, null);
+        _listener!(AdmobAdEvent.completed, null);
         break;
       case 'rewarded':
-        _listener(
+        _listener!(
             AdmobAdEvent.rewarded, Map<String, dynamic>.from(call.arguments));
         break;
       case 'started':
-        _listener(AdmobAdEvent.started, null);
+        _listener!(AdmobAdEvent.started, null);
         break;
     }
-
-    return null;
   }
 }
