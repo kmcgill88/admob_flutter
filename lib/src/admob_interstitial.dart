@@ -2,21 +2,20 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 import 'admob_event_handler.dart';
 
 class AdmobInterstitial extends AdmobEventHandler {
   static const MethodChannel _channel =
       MethodChannel('admob_flutter/interstitial');
 
-  int id;
-  MethodChannel _adChannel;
+  late int id;
+  late MethodChannel _adChannel;
   final String adUnitId;
-  final void Function(AdmobAdEvent, Map<String, dynamic>) listener;
+  final void Function(AdmobAdEvent, Map<String, dynamic>?)? listener;
   final bool nonPersonalizedAds;
 
   AdmobInterstitial({
-    @required this.adUnitId,
+    required this.adUnitId,
     this.listener,
     this.nonPersonalizedAds = false,
   }) : super(listener) {
@@ -38,16 +37,17 @@ class AdmobInterstitial extends AdmobEventHandler {
   }
 
   Future<bool> get isLoaded async {
-    final result = await _channel.invokeMethod('isLoaded', _channelMethodsArguments);
+    final result =
+        await _channel.invokeMethod('isLoaded', _channelMethodsArguments);
     return result;
   }
 
   void load() async {
-    await _channel.invokeMethod('load',
-      _channelMethodsArguments
-        ..['adUnitId'] = adUnitId
-        ..['nonPersonalizedAds'] = nonPersonalizedAds
-    );
+    await _channel.invokeMethod(
+        'load',
+        _channelMethodsArguments
+          ..['adUnitId'] = adUnitId
+          ..['nonPersonalizedAds'] = nonPersonalizedAds);
 
     if (listener != null) {
       await _channel.invokeMethod('setListener', _channelMethodsArguments);
@@ -65,6 +65,6 @@ class AdmobInterstitial extends AdmobEventHandler {
   }
 
   Map<String, dynamic> get _channelMethodsArguments => <String, dynamic>{
-    'id': id,
-  };
+        'id': id,
+      };
 }
