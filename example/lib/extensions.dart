@@ -10,9 +10,9 @@ class AppBarBannerRecipe extends StatelessWidget
   final Size size;
 
   const AppBarBannerRecipe({
-    Key key,
-    @required this.appBar,
-    @required this.size,
+    Key? key,
+    required this.appBar,
+    required this.size,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class AppBarBannerRecipe extends StatelessWidget
           width: size.width,
           height: height,
           child: AdmobBanner(
-            adUnitId: getBannerAdUnitId(),
+            adUnitId: getBannerAdUnitId()!,
             adSize: AdmobBannerSize.ADAPTIVE_BANNER(
               width: size.width.toInt(),
             ),
@@ -52,8 +52,8 @@ extension AppBarAdmobX on AppBar {
 
 class TopBannerAdAppRecipe extends StatelessWidget {
   const TopBannerAdAppRecipe({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   final Widget child;
@@ -63,7 +63,7 @@ class TopBannerAdAppRecipe extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: MediaQuery(
-        data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
+        data: MediaQueryData.fromWindow(WidgetsBinding.instance!.window),
         child: Container(
           color: Colors.blueGrey,
           child: Column(children: [
@@ -77,7 +77,7 @@ class TopBannerAdAppRecipe extends StatelessWidget {
                     width: size.width,
                     height: height,
                     child: AdmobBanner(
-                      adUnitId: getBannerAdUnitId(),
+                      adUnitId: getBannerAdUnitId()!,
                       adSize: AdmobBannerSize.ADAPTIVE_BANNER(
                         width: size.width.toInt(),
                       ),
@@ -96,19 +96,19 @@ class TopBannerAdAppRecipe extends StatelessWidget {
 
 class BottomBannerAdAppRecipe extends StatelessWidget {
   const BottomBannerAdAppRecipe({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   final MaterialApp child;
 
   @override
   Widget build(BuildContext context) {
-    final textDirection = Directionality.of(context) ?? TextDirection.ltr;
+    final textDirection = Directionality.of(context);
     return Directionality(
       textDirection: textDirection,
       child: MediaQuery(
-        data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
+        data: MediaQueryData.fromWindow(WidgetsBinding.instance!.window),
         child: Container(
           color: Colors.blueGrey,
           child: Column(children: [
@@ -123,7 +123,7 @@ class BottomBannerAdAppRecipe extends StatelessWidget {
                     width: size.width,
                     height: height,
                     child: AdmobBanner(
-                      adUnitId: getBannerAdUnitId(),
+                      adUnitId: getBannerAdUnitId()!,
                       adSize: AdmobBannerSize.ADAPTIVE_BANNER(
                         width: size.width.toInt(),
                       ),

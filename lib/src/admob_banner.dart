@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,16 +22,6 @@ class AdmobBanner extends StatefulWidget {
     this.nonPersonalizedAds = false,
   }) : super(key: key);
 
-  static String get testAdUnitId {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111';
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/2934735716';
-    } else {
-      throw UnsupportedError('Unsupported platform');
-    }
-  }
-
   @override
   _AdmobBannerState createState() => _AdmobBannerState();
 }
@@ -41,7 +29,7 @@ class AdmobBanner extends StatefulWidget {
 class _AdmobBannerState extends State<AdmobBanner> {
   final UniqueKey _key = UniqueKey();
   late AdmobBannerController _controller;
-  late Future<Size> adSize;
+  Future<Size>? adSize;
 
   @override
   void initState() {
@@ -91,8 +79,7 @@ class _AdmobBannerState extends State<AdmobBanner> {
           );
         }
 
-        return Text(
-            '$defaultTargetPlatform is not yet supported by the plugin');
+        return Text('$defaultTargetPlatform is not yet supported by the plugin');
       },
     );
   }
@@ -101,13 +88,13 @@ class _AdmobBannerState extends State<AdmobBanner> {
     _controller = AdmobBannerController(id, widget.listener);
 
     if (widget.onBannerCreated != null) {
-      widget.onBannerCreated!.call(_controller);
+      widget.onBannerCreated!(_controller);
     }
   }
 
   Map<String, dynamic> get bannerCreationParams => <String, dynamic>{
-        'adUnitId': widget.adUnitId,
-        'adSize': widget.adSize.toMap,
-        'nonPersonalizedAds': widget.nonPersonalizedAds,
-      };
+    'adUnitId': widget.adUnitId,
+    'adSize': widget.adSize.toMap,
+    'nonPersonalizedAds': widget.nonPersonalizedAds,
+  };
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
 import 'admob_event_handler.dart';
@@ -26,28 +25,17 @@ class AdmobInterstitial extends AdmobEventHandler {
     }
   }
 
-  static String get testAdUnitId {
-    if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/1033173712';
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/4411468910';
-    } else {
-      throw UnsupportedError('Unsupported platform');
-    }
-  }
-
-  Future<bool> get isLoaded async {
-    final result =
-        await _channel.invokeMethod('isLoaded', _channelMethodsArguments);
+  Future<bool?> get isLoaded async {
+    final result = await _channel.invokeMethod('isLoaded', _channelMethodsArguments);
     return result;
   }
 
   void load() async {
-    await _channel.invokeMethod(
-        'load',
-        _channelMethodsArguments
-          ..['adUnitId'] = adUnitId
-          ..['nonPersonalizedAds'] = nonPersonalizedAds);
+    await _channel.invokeMethod('load',
+      _channelMethodsArguments
+        ..['adUnitId'] = adUnitId
+        ..['nonPersonalizedAds'] = nonPersonalizedAds
+    );
 
     if (listener != null) {
       await _channel.invokeMethod('setListener', _channelMethodsArguments);
@@ -65,6 +53,6 @@ class AdmobInterstitial extends AdmobEventHandler {
   }
 
   Map<String, dynamic> get _channelMethodsArguments => <String, dynamic>{
-        'id': id,
-      };
+    'id': id,
+  };
 }

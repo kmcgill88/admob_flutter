@@ -3,43 +3,43 @@ format_version: '8'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: flutter
 trigger_map:
-- push_branch: master
-  workflow: primary
-- pull_request_source_branch: "*"
-  workflow: primary
+  - push_branch: master
+    workflow: primary
+  - pull_request_source_branch: "*"
+    workflow: primary
 workflows:
   primary:
     steps:
-    - git-clone@4.0: {}
-    - flutter-installer@0.11:
-        inputs:
-        - version: 1.20.0
-    - script@1.1:
-        inputs:
-        - content: |-
-            #!/usr/bin/env bash
-            # fail if any commands fails
-            set -e
-            # debug log
-            set -x
+      - git-clone@4.0: {}
+      - flutter-installer@0.11:
+          inputs:
+            - version: 2.0.0
+      - script@1.1:
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                # fail if any commands fails
+                set -e
+                # debug log
+                set -x
 
-            flutter pub get
-            flutter analyze
+                flutter pub get
+                flutter analyze
 
-            cd example
-            flutter build ios --debug --no-codesign
-            flutter build apk --debug
+                cd example
+                flutter build ios --debug --no-codesign
+                flutter build apk --debug
 app:
   envs:
-  - opts:
-      is_expand: false
-    BITRISE_FLUTTER_PROJECT_LOCATION: example
-  - opts:
-      is_expand: false
-    BITRISE_PROJECT_PATH: example/ios/Runner.xcworkspace
-  - opts:
-      is_expand: false
-    BITRISE_SCHEME: Runner
-  - opts:
-      is_expand: false
-    BITRISE_EXPORT_METHOD: development
+    - opts:
+        is_expand: false
+      BITRISE_FLUTTER_PROJECT_LOCATION: example
+    - opts:
+        is_expand: false
+      BITRISE_PROJECT_PATH: example/ios/Runner.xcworkspace
+    - opts:
+        is_expand: false
+      BITRISE_SCHEME: Runner
+    - opts:
+        is_expand: false
+      BITRISE_EXPORT_METHOD: development
