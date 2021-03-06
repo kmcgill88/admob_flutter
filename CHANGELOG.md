@@ -1,3 +1,7 @@
+## [1.0.1] - 2020/10/27
+- Added testAdUnitId getter for Banner, Interstitial and Reward ads. PR[227](https://github.com/kmcgill88/admob_flutter/pull/227). Thank you [DoctorJohn](https://github.com/DoctorJohn)!
+- Fixes typo in README.md PR[224](https://github.com/kmcgill88/admob_flutter/pull/224). Thank you [Skyost](https://github.com/Skyost)!
+
 ## [1.0.0] - 2020/09/21
 - Added support for non-personalized ads. PR [215](https://github.com/kmcgill88/admob_flutter/pull/215). Thank you [Skyost](https://github.com/Skyost)!
 - **REQUIRES Xcode 12**
