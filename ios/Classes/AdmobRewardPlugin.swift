@@ -60,7 +60,7 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
             delegates[id] = AdmobRewardPluginDelegate(channel: channel)
             break
         case "load":
-            loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId, nonPersonalizedAds: (args["nonPersonalizedAds"] as? Bool) ?? false)
+            loadRewardBasedVideoAd(id: id, rewardBasedVideoAdUnitId: adUnitId, nonPersonalizedAds: (args["nonPersonalizedAds"] as? Bool) ?? false, userId: (args["userId"] as? String), customData: (args["customData"] as? String))
             result(nil)
             break
         case "isLoaded":
@@ -88,8 +88,12 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    private func loadRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String, nonPersonalizedAds: Bool) {
+    private func loadRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String, nonPersonalizedAds: Bool, userId: String?, customData: String?) {
+        let ssvOptions = GADServerSideVerificationOptions()
+        ssvOptions.userIdentifier = userId
+        ssvOptions.customRewardString = customData
         let video = GADRewardedAd(adUnitID: rewardBasedVideoAdUnitId)
+        video.serverSideVerificationOptions = ssvOptions
         rewardAds[id] = video
         let request = GADRequest()
 
