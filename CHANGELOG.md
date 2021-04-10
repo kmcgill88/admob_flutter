@@ -1,3 +1,7 @@
+## [2.0.0-nullsafety.1] - 2021/04/10
+- Restored testAdUnitId [275](https://github.com/kmcgill88/admob_flutter/commit/54ae1b24b01981834ac4d7020efaf96345a86d77)
+- Add SSV data support to RewardedVideoAd [274](https://github.com/kmcgill88/admob_flutter/pull/274)
+
 ## [2.0.0-nullsafety.0] - 2021/03/06
 - Migrate to null saftey!
 - Update example to null saftey!
