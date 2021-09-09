@@ -1,3 +1,7 @@
+# Looking for Maintainers.
+Unfortunately I haven't been able to keep up with demand for features and improvments. If you are interested in helping maintain this repo please create an issue requesting maintainer status. Or consider using the new [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) by Google.
+
+
 # admob_flutter
 [![Build Status](https://app.bitrise.io/app/aab4844dfe687df4/status.svg?token=0rKyF3lAc5Q73hC9f3H0EQ)](https://app.bitrise.io/app/aab4844dfe687df4)
 [![version](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square)](https://github.com/Solido/awesome-flutter/)
@@ -5,7 +9,6 @@
 [![GitHub stars](https://img.shields.io/github/stars/kmcgill88/admob_flutter.svg?style=social&label=Star)](https://github/kmcgill88/admob_flutter)
 [![GitHub forks](	https://img.shields.io/github/forks/kmcgill88/admob_flutter.svg?style=social&label=Forks)](https://github/kmcgill88/admob_flutter)
 [![GitHub issues](	https://img.shields.io/github/issues/kmcgill88/admob_flutter.svg?style=social&label=Issues)](https://github/kmcgill88/admob_flutter)
-
 
 
 ![Demo](https://i.imgur.com/zJC41es.gif)
