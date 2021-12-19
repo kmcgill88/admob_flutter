@@ -7,11 +7,11 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.PluginRegistry
 
-class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChannel.MethodCallHandler, RewardedVideoAdListener {
+class AdmobReward(private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding): MethodChannel.MethodCallHandler, RewardedVideoAdListener {
   companion object {
     val allAds: MutableMap<Int, RewardedVideoAd> = mutableMapOf()
   }
@@ -24,7 +24,7 @@ class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChanne
         val id = call.argument<Int>("id")
         if (allAds[id]!!.rewardedVideoAdListener != null) return
 
-        adChannel = MethodChannel(registrar.messenger(), "admob_flutter/reward_$id")
+        adChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/reward_$id")
         allAds[id]!!.rewardedVideoAdListener = this
       }
       "load" -> {
@@ -41,7 +41,7 @@ class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChanne
           adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
         }
 
-        if (allAds[id] == null) allAds[id!!] = MobileAds.getRewardedVideoAdInstance(registrar.context())
+        if (allAds[id] == null) allAds[id!!] = MobileAds.getRewardedVideoAdInstance(flutterPluginBinding.applicationContext)
         if (userId != null) allAds[id]?.setUserId(userId)
         if (customData != null) allAds[id]?.setCustomData(customData)
         allAds[id]?.loadAd(adUnitId, adRequestBuilder.build())
@@ -68,7 +68,7 @@ class AdmobReward(private val registrar: PluginRegistry.Registrar): MethodChanne
       "dispose" -> {
         val id = call.argument<Int>("id")
 
-        allAds[id]!!.destroy(registrar.context())
+        allAds[id]!!.destroy(flutterPluginBinding.applicationContext)
         allAds.remove(id)
       }
       else -> result.notImplemented()

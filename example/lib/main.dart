@@ -154,7 +154,8 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                         Expanded(
                           child: TextButton(
                             onPressed: () async {
-                              if (await (interstitialAd.isLoaded as Future<bool>)) {
+                              final isLoaded = await interstitialAd.isLoaded;
+                              if (isLoaded ?? false) {
                                 interstitialAd.show();
                               } else {
                                 showSnackBar(
