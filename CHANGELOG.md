@@ -1,3 +1,6 @@
+## [2.0.0] - 2021/12/19
+- Migrate Android to v2 embedding [287](https://github.com/kmcgill88/admob_flutter/issues/287)
+
 ## [2.0.0-nullsafety.1] - 2021/04/10
 - Restored testAdUnitId [275](https://github.com/kmcgill88/admob_flutter/commit/54ae1b24b01981834ac4d7020efaf96345a86d77)
 - Add SSV data support to RewardedVideoAd [274](https://github.com/kmcgill88/admob_flutter/pull/274)
