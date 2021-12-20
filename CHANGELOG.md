@@ -1,5 +1,6 @@
 ## [2.0.0] - 2021/12/19
 - Migrate Android to v2 embedding [287](https://github.com/kmcgill88/admob_flutter/issues/287)
+- Update Bitrise build machine to Xcode 13.2.x, on macOS (Monterey); Flutter 2.8.1
 
 ## [2.0.0-nullsafety.1] - 2021/04/10
 - Restored testAdUnitId [275](https://github.com/kmcgill88/admob_flutter/commit/54ae1b24b01981834ac4d7020efaf96345a86d77)
