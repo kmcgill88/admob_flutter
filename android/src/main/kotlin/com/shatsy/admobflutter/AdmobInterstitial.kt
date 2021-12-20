@@ -4,11 +4,11 @@ import android.os.Bundle
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.PluginRegistry
 
-class AdmobInterstitial(private val registrar: PluginRegistry.Registrar): MethodChannel.MethodCallHandler {
+class AdmobInterstitial(private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding): MethodChannel.MethodCallHandler {
   companion object {
     val allAds: MutableMap<Int, InterstitialAd> = mutableMapOf()
   }
@@ -18,7 +18,7 @@ class AdmobInterstitial(private val registrar: PluginRegistry.Registrar): Method
         val id = call.argument<Int>("id")
         if (allAds[id]!!.adListener != null) return
 
-        val adChannel = MethodChannel(registrar.messenger(), "admob_flutter/interstitial_$id")
+        val adChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/interstitial_$id")
         allAds[id]!!.adListener = createAdListener(adChannel)
       }
       "load" -> {
@@ -34,7 +34,7 @@ class AdmobInterstitial(private val registrar: PluginRegistry.Registrar): Method
         }
 
         if (allAds[id] == null) {
-          allAds[id!!] = InterstitialAd(registrar.context())
+          allAds[id!!] = InterstitialAd(flutterPluginBinding.applicationContext)
           allAds[id]!!.adUnitId = adUnitId
         }
 

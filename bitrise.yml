@@ -13,7 +13,7 @@ workflows:
       - git-clone@4.0: {}
       - flutter-installer@0.11:
           inputs:
-            - version: 2.0.0
+            - version: 2.8.1
       - script@1.1:
           inputs:
             - content: |-
@@ -43,3 +43,6 @@ app:
     - opts:
         is_expand: false
       BITRISE_EXPORT_METHOD: development
+meta:
+  bitrise.io:
+    stack: osx-xcode-13.2.x

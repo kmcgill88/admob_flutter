@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:admob_flutter/admob_flutter.dart';
 // import 'package:admob_flutter_example/extensions.dart';
 import 'package:admob_flutter_example/new_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -154,7 +153,8 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                         Expanded(
                           child: TextButton(
                             onPressed: () async {
-                              if (await (interstitialAd.isLoaded as Future<bool>)) {
+                              final isLoaded = await interstitialAd.isLoaded;
+                              if (isLoaded ?? false) {
                                 interstitialAd.show();
                               } else {
                                 showSnackBar(
