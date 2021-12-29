@@ -1,3 +1,10 @@
+## [3.0.0-beta.0] - 2021/12/28
+- Increase Android min api level to 19.
+- Increase iOS min SDK to 12.
+- Removed deprecated AdmobBannerSize.SMART_BANNER
+- Removed deprecated callback `leftApplication`
+- Update native SDK's to `'Google-Mobile-Ads-SDK', '~> 8.13.0'` and `com.google.android.gms:play-services-ads:20.5.0`
+
 ## [2.0.0] - 2021/12/19
 - Migrate Android to v2 embedding [287](https://github.com/kmcgill88/admob_flutter/issues/287)
 - Update Bitrise build machine to Xcode 13.2.x, on macOS (Monterey); Flutter 2.8.1
