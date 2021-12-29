@@ -62,7 +62,6 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
             result(nil)
             break
         case "load":
-            
             let request = GADRequest()
             let nonPersonalizedAds = (args["nonPersonalizedAds"] as? Bool) ?? false
 
@@ -96,14 +95,18 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
             result(rewardAds[id] != nil)
             break
         case "show":
-            if let del = rewardAds[id], let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
-                if let rewardAd = del.ad, let channel = del.channel {
-                    rewardAd.present(fromRootViewController: rootViewController) {
-//                        channel.invokeMethod(T##method: String##String, arguments: T##Any?)
+            if let del = rewardAds[id], let rewardAd = del.ad, let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
+                rewardAd.present(fromRootViewController: rootViewController) {
+                    if let channel = del.channel {
                         print("rewarded")
+                        channel.invokeMethod("rewarded", arguments: [
+                            "type": rewardAd.adReward.type,
+                            "amount": rewardAd.adReward.amount
+                        ])
+                    } else {
+                        print("rewarded but no channel")
                     }
                 }
-  
             } else {
                 result(FlutterError(
                     code: "GADRewardBasedVideoAd Error",
@@ -120,64 +123,36 @@ public class AdmobRewardPlugin: NSObject, FlutterPlugin {
             result(FlutterMethodNotImplemented)
         }
     }
-    
-//    private func loadRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String, nonPersonalizedAds: Bool, userId: String?, customData: String?) {
-//        let ssvOptions = GADServerSideVerificationOptions()
-//        ssvOptions.userIdentifier = userId
-//        ssvOptions.customRewardString = customData
-//        let video = GADRewardedAd(adUnitID: rewardBasedVideoAdUnitId)
-//        video.serverSideVerificationOptions = ssvOptions
-//        rewardAds[id] = video
-//        let request = GADRequest()
-//
-//        if (nonPersonalizedAds) {
-//            let extras = GADExtras()
-//            extras.additionalParameters = ["npa": "1"]
-//            request.register(extras)
-//        }
-//
-//        video.load(request) { [weak self] error in
-//            if let error = error {
-//                // Handle ad failed to load case.
-//                self?.delegates[id]?.channel.invokeMethod("failedToLoad", arguments: ["errorCode": error.localizedDescription])
-//            } else {
-//                // Ad successfully loaded.
-//                self?.delegates[id]?.channel.invokeMethod("loaded", arguments: nil)
-//            }
-//        }
-//    }
-//
-//    private func getRewardBasedVideoAd(id: Int, rewardBasedVideoAdUnitId: String) -> GADRewardedAd {
-//        if rewardAds[id] == nil {
-//            let rewardBadedVideoAd = GADRewardedAd(adUnitID: rewardBasedVideoAdUnitId)
-//            rewardAds[id] = rewardBadedVideoAd
-//        }
-//
-//        return rewardAds[id]!
-//    }
 }
 
 class AdmobRewardPluginDelegate: NSObject, GADFullScreenContentDelegate {
     var channel: FlutterMethodChannel? = nil
     var ad: GADRewardedAd? = nil
 
-    func rewardedAdDidPresent(_ rewardedAd: GADRewardedAd) {
+    func adWillDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        // Unused
+    }
+
+    func adDidPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
         channel?.invokeMethod("opened", arguments: nil)
     }
-    
-    func rewardedAdDidDismiss(_ rewardedAd: GADRewardedAd) {
+
+    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
         channel?.invokeMethod("closed", arguments: nil)
     }
-    
-    func rewardedAd(_ rewardedAd: GADRewardedAd, didFailToPresentWithError error: Error) {
-        channel?.invokeMethod("failedToLoad", arguments: ["errorCode": error.localizedDescription])
+
+    func adDidRecordImpression(_ ad: GADFullScreenPresentingAd) {
+        channel?.invokeMethod("impression", arguments: nil)
     }
-    
-    func rewardedAd(_ rewardedAd: GADRewardedAd, userDidEarn reward: GADAdReward) {
-        print("rewarded delegate")
-        channel?.invokeMethod("rewarded", arguments: [
-            "type": reward.type,
-            "amount": reward.amount
+
+    func adDidRecordClick(_ ad: GADFullScreenPresentingAd) {
+        channel?.invokeMethod("clicked", arguments: nil)
+    }
+
+    func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        channel?.invokeMethod("failedToLoad", arguments:  [
+            "errorCode": 1,
+            "error": error.localizedDescription
         ])
     }
 }
