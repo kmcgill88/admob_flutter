@@ -42,8 +42,6 @@ class AdmobFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
 
         defaultChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter")
         defaultChannel.setMethodCallHandler(this)
-
-
         interstitialChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/interstitial")
         rewardChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/reward")
         flutterPluginBinding.platformViewRegistry.registerViewFactory("admob_flutter/banner", AdmobBannerFactory(flutterPluginBinding.binaryMessenger))
@@ -54,7 +52,6 @@ class AdmobFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
         rewardChannel.setMethodCallHandler(null)
         flutterPluginBinding = null
     }
-
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         flutterPluginBinding?.let {
@@ -97,11 +94,11 @@ class AdmobFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
                 val name = args["name"] as String
                 val width = args["width"] as Int
                 when (name) {
-                    "SMART_BANNER" -> {
+                    "FLUID" -> {
                         val metrics = context.resources.displayMetrics
                         result.success(hashMapOf(
-                                "width" to AdSize.SMART_BANNER.getWidthInPixels(context) / metrics.density,
-                                "height" to AdSize.SMART_BANNER.getHeightInPixels(context) / metrics.density
+                                "width" to AdSize.FLUID.getWidthInPixels(context) / metrics.density,
+                                "height" to AdSize.FLUID.getHeightInPixels(context) / metrics.density
                         ))
                     }
                     "ADAPTIVE_BANNER" -> {

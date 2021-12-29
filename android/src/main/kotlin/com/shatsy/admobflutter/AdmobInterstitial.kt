@@ -24,9 +24,11 @@ class AdmobInterstitial(private val flutterPluginBinding: FlutterPlugin.FlutterP
                     result.error("1", "Missing id", "Missing id")
                     return
                 }
-                if (allAds[id]?.adListener != null) return
-
+                if (allAds[id] == null) {
+                    allAds[id] = AdmobInterstitialListener()
+                }
                 allAds[id]!!.adListener = createAdListener(MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/interstitial_$id"))
+                return result.success(null)
             }
             "load" -> {
                 val id = call.argument<Int>("id")
@@ -43,41 +45,39 @@ class AdmobInterstitial(private val flutterPluginBinding: FlutterPlugin.FlutterP
                     extras.putString("npa", "1")
                     adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
                 }
-
                 if (allAds[id] == null) {
                     allAds[id] = AdmobInterstitialListener()
-                    InterstitialAd.load(activity, adUnitId, adRequestBuilder.build(), object : InterstitialAdLoadCallback() {
-                        override fun onAdFailedToLoad(adError: LoadAdError) {
-                            allAds[id]?.adListener?.onAdFailedToLoad(adError)
-                            allAds[id] = null
-                            return result.error("2", "onAdFailedToLoad", adError.message)
-                        }
+                }
 
-                        override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                            allAds[id]?.ad = interstitialAd
-                            allAds[id]?.adListener?.onAdLoaded()
-                            allAds[id]?.ad?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                                override fun onAdDismissedFullScreenContent() {
-                                    allAds[id]?.adListener?.onAdClosed()
-                                }
+                InterstitialAd.load(activity, adUnitId, adRequestBuilder.build(), object : InterstitialAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        allAds[id]?.adListener?.onAdFailedToLoad(adError)
+                        allAds[id] = null
+                        return result.error("2", "onAdFailedToLoad", adError.message)
+                    }
 
-                                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                                    adError?.let {
-                                        allAds[id]?.adListener?.onAdFailedToLoad(LoadAdError(it.code, it.message, "admob_flutter", adError, null))
-                                    }
-                                }
+                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                        allAds[id]?.ad = interstitialAd
+                        allAds[id]?.adListener?.onAdLoaded()
+                        allAds[id]?.ad?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                            override fun onAdDismissedFullScreenContent() {
+                                allAds[id]?.adListener?.onAdClosed()
+                            }
 
-                                override fun onAdShowedFullScreenContent() {
-                                    allAds[id]?.adListener?.onAdLoaded()
-
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                                adError?.let {
+                                    allAds[id]?.adListener?.onAdFailedToLoad(LoadAdError(it.code, it.message, "admob_flutter", adError, null))
                                 }
                             }
-                            return result.success(null)
+
+                            override fun onAdShowedFullScreenContent() {
+                                allAds[id]?.adListener?.onAdOpened()
+                            }
                         }
-                    })
-                } else {
-                    return result.success(null)
-                }
+                        return result.success(null)
+                    }
+                })
+
             }
             "isLoaded" -> {
                 val id = call.argument<Int>("id")

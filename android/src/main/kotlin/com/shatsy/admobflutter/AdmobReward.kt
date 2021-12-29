@@ -19,14 +19,16 @@ class AdmobReward(private val flutterPluginBinding: FlutterPlugin.FlutterPluginB
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "setListener" -> {
-                val id = call.argument<Int>("id")
-                if (allAds[id]?.adListener != null) return
+                val id = call.argument<Int>("id") ?: 0
+                if (allAds[id] == null) {
+                    allAds[id] = AdmobRewardedListener()
+                }
                 allAds[id]?.adListener = createAdListener(MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/reward_$id"))
             }
             "load" -> {
-                val id = call.argument<Int>("id")
+                val id = call.argument<Int>("id") ?: 0
                 val adUnitId = call.argument<String>("adUnitId")
-                if (id == null || adUnitId == null) {
+                if (adUnitId == null) {
                     result.error("1", "Missing id and/or adUnitId", "Missing id and/or adUnitId")
                     return
                 }
@@ -40,37 +42,37 @@ class AdmobReward(private val flutterPluginBinding: FlutterPlugin.FlutterPluginB
 
                 if (allAds[id] == null) {
                     allAds[id] = AdmobRewardedListener()
-                    RewardedAd.load(activity, adUnitId, adRequestBuilder.build(), object : RewardedAdLoadCallback() {
-                        override fun onAdFailedToLoad(adError: LoadAdError) {
-                            allAds[id]?.adListener?.onAdFailedToLoad(adError)
-                            allAds[id] = null
-                            return result.error("2", "onAdFailedToLoad", adError.message)
-                        }
+                }
 
-                        override fun onAdLoaded(rewardedAd: RewardedAd) {
-                            allAds[id]?.ad = rewardedAd
-                            allAds[id]!!.ad?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                                override fun onAdDismissedFullScreenContent() {
-                                    allAds[id]?.adListener?.onAdClosed()
-                                    allAds[id] = null
-                                }
+                RewardedAd.load(activity, adUnitId, adRequestBuilder.build(), object : RewardedAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        allAds[id]?.adListener?.onAdFailedToLoad(adError)
+                        allAds[id] = null
+                        return result.error("2", "onAdFailedToLoad", adError.message)
+                    }
 
-                                override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-                                    adError?.let {
-                                        allAds[id]?.adListener?.onAdFailedToLoad(LoadAdError(it.code, it.message, "admob_flutter", adError, null))
-                                    }
-                                }
+                    override fun onAdLoaded(rewardedAd: RewardedAd) {
+                        allAds[id]?.ad = rewardedAd
+                        allAds[id]?.adListener?.onAdLoaded()
+                        allAds[id]!!.ad?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                            override fun onAdDismissedFullScreenContent() {
+                                allAds[id]?.adListener?.onAdClosed()
+                            }
 
-                                override fun onAdShowedFullScreenContent() {
-                                    allAds[id]?.adListener?.onAdOpened()
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                                adError?.let {
+                                    allAds[id]?.adListener?.onAdFailedToLoad(LoadAdError(it.code, it.message, "admob_flutter", adError, null))
                                 }
                             }
-                            return result.success(null)
+
+                            override fun onAdShowedFullScreenContent() {
+                                allAds[id]?.adListener?.onAdOpened()
+                            }
                         }
-                    })
-                } else {
-                    return result.success(null)
-                }
+                        return result.success(null)
+                    }
+                })
+
             }
             "isLoaded" -> {
                 val id = call.argument<Int>("id")
@@ -84,14 +86,12 @@ class AdmobReward(private val flutterPluginBinding: FlutterPlugin.FlutterPluginB
 
                 if (allAds[id]?.ad != null) {
                     allAds[id]?.ad?.show(activity) {
-                        fun onUserEarnedReward(rewardItem: RewardItem) {
-                            allAds[id]?.adListener?.onRewarded(rewardItem)
-                        }
+                        allAds[id]?.adListener?.onRewarded(it)
                     }
                 } else result.error(null, null, null)
             }
             "dispose" -> {
-                val id = call.argument<Int>("id")
+                val id = call.argument<Int>("id") ?: 0
                 AdmobInterstitial.allAds.remove(id)
                 return result.success(null)
             }

@@ -72,7 +72,6 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
         break;
       case AdmobAdEvent.failedToLoad:
         showSnackBar('Admob $adType failed to load. :(');
-        print(args);
         break;
       case AdmobAdEvent.rewarded:
         showDialog(

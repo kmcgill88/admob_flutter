@@ -23,7 +23,7 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
         channel.setMethodCallHandler(this)
 
         adView.adSize = getSize(context, args["adSize"] as HashMap<*, *>)
-        adView.adUnitId = args["adUnitId"] as String?
+        adView.adUnitId = args["adUnitId"] as String
 
         val adRequestBuilder = AdRequest.Builder()
         val npa: Boolean? = args["nonPersonalizedAds"] as Boolean?
@@ -47,7 +47,7 @@ class AdmobBanner(context: Context, messenger: BinaryMessenger, id: Int, args: H
             "MEDIUM_RECTANGLE" -> AdSize.MEDIUM_RECTANGLE
             "FULL_BANNER" -> AdSize.FULL_BANNER
             "LEADERBOARD" -> AdSize.LEADERBOARD
-            "SMART_BANNER" -> AdSize.SMART_BANNER
+            "FLUID" -> AdSize.FLUID
             "ADAPTIVE_BANNER" -> AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width)
             else -> AdSize(width, height)
         }
