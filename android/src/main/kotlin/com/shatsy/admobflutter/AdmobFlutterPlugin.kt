@@ -1,30 +1,33 @@
 package com.shatsy.admobflutter
 
-import android.content.Context
 import androidx.annotation.NonNull
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.rewarded.RewardItem
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-fun createAdListener(channel: MethodChannel): AdListener {
-    return object : AdListener() {
+abstract class AdmobFlutterAdListener : AdListener() {
+    open fun onRewarded(reward: RewardItem) {}
+}
+
+fun createAdListener(channel: MethodChannel): AdmobFlutterAdListener {
+    return object : AdmobFlutterAdListener() {
         override fun onAdLoaded() = channel.invokeMethod("loaded", null)
-        override fun onAdFailedToLoad(errorCode: Int) = channel.invokeMethod("failedToLoad", hashMapOf("errorCode" to errorCode))
+        override fun onAdFailedToLoad(errorCode: LoadAdError) = channel.invokeMethod("failedToLoad", hashMapOf("errorCode" to errorCode))
         override fun onAdClicked() = channel.invokeMethod("clicked", null)
         override fun onAdImpression() = channel.invokeMethod("impression", null)
         override fun onAdOpened() = channel.invokeMethod("opened", null)
-        override fun onAdLeftApplication() = channel.invokeMethod("leftApplication", null)
         override fun onAdClosed() = channel.invokeMethod("closed", null)
+        override fun onRewarded(reward: RewardItem) = channel.invokeMethod("rewarded", hashMapOf("type" to (reward.type), "amount" to (reward.amount)))
     }
 }
 
-class AdmobFlutterPlugin : MethodCallHandler, FlutterPlugin {
+class AdmobFlutterPlugin : MethodCallHandler, FlutterPlugin, ActivityAware {
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -32,36 +35,54 @@ class AdmobFlutterPlugin : MethodCallHandler, FlutterPlugin {
     private lateinit var defaultChannel: MethodChannel
     private lateinit var interstitialChannel: MethodChannel
     private lateinit var rewardChannel: MethodChannel
-    private var context: Context? = null
+    private var flutterPluginBinding: FlutterPlugin.FlutterPluginBinding? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        context = flutterPluginBinding.applicationContext
+        this.flutterPluginBinding = flutterPluginBinding
 
         defaultChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter")
         defaultChannel.setMethodCallHandler(this)
 
+
         interstitialChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/interstitial")
-        interstitialChannel.setMethodCallHandler(AdmobInterstitial(flutterPluginBinding))
-
         rewardChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/reward")
-        rewardChannel.setMethodCallHandler(AdmobReward(flutterPluginBinding))
-
         flutterPluginBinding.platformViewRegistry.registerViewFactory("admob_flutter/banner", AdmobBannerFactory(flutterPluginBinding.binaryMessenger))
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        defaultChannel.setMethodCallHandler(null)
         interstitialChannel.setMethodCallHandler(null)
         rewardChannel.setMethodCallHandler(null)
-        context = null
+        flutterPluginBinding = null
+    }
+
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        flutterPluginBinding?.let {
+            interstitialChannel.setMethodCallHandler(AdmobInterstitial(it, binding.activity))
+            rewardChannel.setMethodCallHandler(AdmobReward(it, binding.activity))
+        }
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        // no-op
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        flutterPluginBinding?.let {
+            interstitialChannel.setMethodCallHandler(AdmobInterstitial(it, binding.activity))
+            rewardChannel.setMethodCallHandler(AdmobReward(it, binding.activity))
+        }
+    }
+
+    override fun onDetachedFromActivity() {
+        interstitialChannel.setMethodCallHandler(null)
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
-
-        if (context == null) {
-            return result.error("null_android_context", "Android context is null.", "Android context is null.")
+        if (flutterPluginBinding == null) {
+            return result.error("null_android_flutterPluginBinding", "flutterPluginBinding is null.", "flutterPluginBinding is null.")
         }
-
+        val context = flutterPluginBinding!!.applicationContext
         when (call.method) {
             "initialize" -> {
                 MobileAds.initialize(context)
@@ -77,7 +98,7 @@ class AdmobFlutterPlugin : MethodCallHandler, FlutterPlugin {
                 val width = args["width"] as Int
                 when (name) {
                     "SMART_BANNER" -> {
-                        val metrics = context!!.resources.displayMetrics
+                        val metrics = context.resources.displayMetrics
                         result.success(hashMapOf(
                                 "width" to AdSize.SMART_BANNER.getWidthInPixels(context) / metrics.density,
                                 "height" to AdSize.SMART_BANNER.getHeightInPixels(context) / metrics.density
