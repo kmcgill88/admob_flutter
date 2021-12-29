@@ -64,7 +64,7 @@ public class SwiftAdmobFlutterPlugin: NSObject, FlutterPlugin {
                 return
         }
         switch name {
-        case "SMART_BANNER":
+        case "FLUID":
             // TODO: Do we need Landscape too?
             let height: CGFloat = UIApplication.shared.keyWindow?.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClass.compact ? 50 : 90;
             result([

@@ -67,6 +67,9 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
       case AdmobAdEvent.closed:
         showSnackBar('Admob $adType Ad closed!');
         break;
+      case AdmobAdEvent.impression:
+        showSnackBar('$adType made an impression.');
+        break;
       case AdmobAdEvent.failedToLoad:
         showSnackBar('Admob $adType failed to load. :(');
         break;
@@ -94,10 +97,13 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
         );
         break;
       default:
+        showSnackBar('No matching event $adType. Event: $event');
+        break;
     }
   }
 
   void showSnackBar(String content) {
+    print(content);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(content),
@@ -155,7 +161,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                             onPressed: () async {
                               final isLoaded = await interstitialAd.isLoaded;
                               if (isLoaded ?? false) {
-                                interstitialAd.show();
+                                await interstitialAd.show();
                               } else {
                                 showSnackBar(
                                     'Interstitial ad is still loading...');
@@ -171,7 +177,7 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                           child: TextButton(
                             onPressed: () async {
                               if (await rewardAd.isLoaded) {
-                                rewardAd.show();
+                                await rewardAd.show();
                               } else {
                                 showSnackBar('Reward ad is still loading...');
                               }
@@ -214,8 +220,8 @@ class _MyMaterialAppState extends State<MyMaterialApp> {
                                 child: Text('LEADERBOARD'),
                               ),
                               PopupMenuItem(
-                                value: AdmobBannerSize.SMART_BANNER(context),
-                                child: Text('SMART_BANNER'),
+                                value: AdmobBannerSize.FLUID(context),
+                                child: Text('FLUID'),
                               ),
                               PopupMenuItem(
                                 value: AdmobBannerSize.ADAPTIVE_BANNER(

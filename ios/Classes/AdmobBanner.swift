@@ -86,28 +86,27 @@ class AdmobBanner : NSObject, FlutterPlatformView {
     private var adSize: GADAdSize {
         guard let size = args["adSize"] as? [String: Any] else {
             assertionFailure("failed to get adSize")
-            return kGADAdSizeBanner // fallback value
+            return GADAdSizeBanner // fallback value
         }
 
         if let name = size["name"] as? String {
             switch name {
             case "BANNER":
-                return kGADAdSizeBanner
+                return GADAdSizeBanner
             case "LARGE_BANNER":
-                return kGADAdSizeLargeBanner
+                return GADAdSizeLargeBanner
             case "MEDIUM_RECTANGLE":
-                return kGADAdSizeMediumRectangle
+                return GADAdSizeMediumRectangle
             case "FULL_BANNER":
-                return kGADAdSizeFullBanner
+                return GADAdSizeFullBanner
             case "LEADERBOARD":
-                return kGADAdSizeLeaderboard
-            case "SMART_BANNER":
-                // TODO: Do we need Landscape too?
-                return kGADAdSizeSmartBannerPortrait
+                return GADAdSizeLeaderboard
+            case "FLUID":
+                return GADAdSizeFluid
             case "ADAPTIVE_BANNER":
                 return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(frame.width)
             default:
-                assertionFailure("invalid adSize.name")
+                assertionFailure("invalid ad size: \(name)")
                 break
             }
         }
@@ -123,28 +122,32 @@ extension AdmobBanner : GADBannerViewDelegate {
         channel.invokeMethod("loaded", arguments: nil)
     }
     
-    func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: GADRequestError) {
+    func bannerView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: Error) {
+        print("bannerView: Failled to load banner view: \(error.localizedDescription)")
         channel.invokeMethod("failedToLoad", arguments: [
-            "errorCode": error.code,
+            "errorCode": error.localizedDescription,
             "error": error.localizedDescription
         ])
     }
     
     /// Tells the delegate that a full screen view will be presented in response to the user clicking on
     /// an ad. The delegate may want to pause animations and time sensitive interactions.
-    func adViewWillPresentScreen(_ bannerView: GADBannerView) {
-        channel.invokeMethod("clicked", arguments: nil)
+    func bannerViewWillPresentScreen(_ bannerView: GADBannerView) {
         channel.invokeMethod("opened", arguments: nil)
     }
-    
-    // TODO: not sure this exists on iOS.
-    // channel.invokeMethod("impression", null)
+    func bannerViewDidRecordClick(_ bannerView: GADBannerView) {
+        channel.invokeMethod("clicked", arguments: nil)
+    }
+
+    func bannerViewDidRecordImpression(_ bannerView: GADBannerView) {
+        channel.invokeMethod("impression", arguments: nil)
+    }
     
     func adViewWillLeaveApplication(_ bannerView: GADBannerView) {
         channel.invokeMethod("leftApplication", arguments: nil)
     }
     
-    func adViewDidDismissScreen(_ bannerView: GADBannerView) {
+    func bannerViewDidDismissScreen(_ bannerView: GADBannerView) {
         channel.invokeMethod("closed", arguments: nil)
     }
 }

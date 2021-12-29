@@ -1,86 +1,106 @@
 package com.shatsy.admobflutter
 
+import android.app.Activity
 import android.os.Bundle
 import com.google.ads.mediation.admob.AdMobAdapter
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.reward.RewardItem
-import com.google.android.gms.ads.reward.RewardedVideoAd
-import com.google.android.gms.ads.reward.RewardedVideoAdListener
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-class AdmobReward(private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding): MethodChannel.MethodCallHandler, RewardedVideoAdListener {
-  companion object {
-    val allAds: MutableMap<Int, RewardedVideoAd> = mutableMapOf()
-  }
-
-  lateinit var adChannel: MethodChannel
-
-  override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-    when(call.method) {
-      "setListener" -> {
-        val id = call.argument<Int>("id")
-        if (allAds[id]!!.rewardedVideoAdListener != null) return
-
-        adChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/reward_$id")
-        allAds[id]!!.rewardedVideoAdListener = this
-      }
-      "load" -> {
-        val id = call.argument<Int>("id")
-        val adUnitId = call.argument<String>("adUnitId")
-        val userId = call.argument<String?>("userId")
-        val customData = call.argument<String?>("customData")
-
-        val adRequestBuilder = AdRequest.Builder()
-        val npa = call.argument<Boolean>("nonPersonalizedAds")
-        if(npa == true) {
-          val extras = Bundle()
-          extras.putString("npa", "1")
-          adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-        }
-
-        if (allAds[id] == null) allAds[id!!] = MobileAds.getRewardedVideoAdInstance(flutterPluginBinding.applicationContext)
-        if (userId != null) allAds[id]?.setUserId(userId)
-        if (customData != null) allAds[id]?.setCustomData(customData)
-        allAds[id]?.loadAd(adUnitId, adRequestBuilder.build())
-        result.success(null)
-      }
-      "isLoaded" -> {
-        val id = call.argument<Int>("id")
-
-        if (allAds[id] == null) {
-          return result.success(false)
-        }
-
-        if (allAds[id]!!.isLoaded) {
-          result.success(true)
-        } else result.success(false)
-      }
-      "show" -> {
-        val id = call.argument<Int>("id")
-
-        if (allAds[id]!!.isLoaded) {
-          allAds[id]!!.show()
-        } else result.error(null, null, null)
-      }
-      "dispose" -> {
-        val id = call.argument<Int>("id")
-
-        allAds[id]!!.destroy(flutterPluginBinding.applicationContext)
-        allAds.remove(id)
-      }
-      else -> result.notImplemented()
+class AdmobReward(private val flutterPluginBinding: FlutterPlugin.FlutterPluginBinding, private val activity: Activity) : MethodChannel.MethodCallHandler {
+    companion object {
+        val allAds: MutableMap<Int, AdmobRewardedListener?> = mutableMapOf()
     }
-  }
 
-  override fun onRewardedVideoAdClosed() = adChannel.invokeMethod("closed", null)
-  override fun onRewardedVideoAdLeftApplication() = adChannel.invokeMethod("leftApplication", null)
-  override fun onRewardedVideoAdLoaded() = adChannel.invokeMethod("loaded", null)
-  override fun onRewardedVideoAdOpened() = adChannel.invokeMethod("opened", null)
-  override fun onRewardedVideoCompleted() = adChannel.invokeMethod("completed", null)
-  override fun onRewarded(reward: RewardItem?) = adChannel.invokeMethod("rewarded", hashMapOf("type" to (reward?.type ?: ""), "amount" to (reward?.amount ?: 0)))
-  override fun onRewardedVideoStarted() = adChannel.invokeMethod("started", null)
-  override fun onRewardedVideoAdFailedToLoad(errorCode: Int) = adChannel.invokeMethod("failedToLoad", hashMapOf("errorCode" to errorCode))
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+        when (call.method) {
+            "setListener" -> {
+                val id = call.argument<Int>("id") ?: 0
+                if (allAds[id] == null) {
+                    allAds[id] = AdmobRewardedListener()
+                }
+                allAds[id]?.adListener = createAdListener(MethodChannel(flutterPluginBinding.binaryMessenger, "admob_flutter/reward_$id"))
+            }
+            "load" -> {
+                val id = call.argument<Int>("id") ?: 0
+                val adUnitId = call.argument<String>("adUnitId")
+                if (adUnitId == null) {
+                    result.error("1", "Missing id and/or adUnitId", "Missing id and/or adUnitId")
+                    return
+                }
+                val adRequestBuilder = AdRequest.Builder()
+                val npa = call.argument<Boolean>("nonPersonalizedAds")
+                if (npa == true) {
+                    val extras = Bundle()
+                    extras.putString("npa", "1")
+                    adRequestBuilder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+                }
+
+                if (allAds[id] == null) {
+                    allAds[id] = AdmobRewardedListener()
+                }
+
+                RewardedAd.load(activity, adUnitId, adRequestBuilder.build(), object : RewardedAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        allAds[id]?.adListener?.onAdFailedToLoad(adError)
+                        allAds[id] = null
+                        return result.error("2", "onAdFailedToLoad", adError.message)
+                    }
+
+                    override fun onAdLoaded(rewardedAd: RewardedAd) {
+                        allAds[id]?.ad = rewardedAd
+                        allAds[id]?.adListener?.onAdLoaded()
+                        allAds[id]!!.ad?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                            override fun onAdDismissedFullScreenContent() {
+                                allAds[id]?.adListener?.onAdClosed()
+                            }
+
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+                                adError?.let {
+                                    allAds[id]?.adListener?.onAdFailedToLoad(LoadAdError(it.code, it.message, "admob_flutter", adError, null))
+                                }
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                allAds[id]?.adListener?.onAdOpened()
+                            }
+                        }
+                        return result.success(null)
+                    }
+                })
+
+            }
+            "isLoaded" -> {
+                val id = call.argument<Int>("id")
+
+                return if (allAds[id] == null) {
+                    result.success(false)
+                } else result.success(true)
+            }
+            "show" -> {
+                val id = call.argument<Int>("id")
+
+                if (allAds[id]?.ad != null) {
+                    allAds[id]?.ad?.show(activity) {
+                        allAds[id]?.adListener?.onRewarded(it)
+                    }
+                } else result.error(null, null, null)
+            }
+            "dispose" -> {
+                val id = call.argument<Int>("id") ?: 0
+                AdmobInterstitial.allAds.remove(id)
+                return result.success(null)
+            }
+            else -> result.notImplemented()
+        }
+    }
+}
+
+class AdmobRewardedListener {
+    var ad: RewardedAd? = null
+    var adListener: AdmobFlutterAdListener? = null
 }

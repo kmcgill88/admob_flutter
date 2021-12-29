@@ -41,7 +41,7 @@ class AdmobInterstitial extends AdmobEventHandler {
     return result;
   }
 
-  void load() async {
+  Future<void> load() async {
     await _channel.invokeMethod('load',
       _channelMethodsArguments
         ..['adUnitId'] = adUnitId
@@ -53,13 +53,13 @@ class AdmobInterstitial extends AdmobEventHandler {
     }
   }
 
-  void show() async {
+  Future<void> show() async {
     if (await isLoaded == true) {
       await _channel.invokeMethod('show', _channelMethodsArguments);
     }
   }
 
-  void dispose() async {
+  Future<void> dispose() async {
     await _channel.invokeMethod('dispose', _channelMethodsArguments);
   }
 

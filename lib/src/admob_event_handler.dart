@@ -32,9 +32,6 @@ abstract class AdmobEventHandler {
       case 'opened':
         _listener!(AdmobAdEvent.opened, null);
         break;
-      case 'leftApplication':
-        _listener!(AdmobAdEvent.leftApplication, null);
-        break;
       case 'closed':
         _listener!(AdmobAdEvent.closed, null);
         break;

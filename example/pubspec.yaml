@@ -7,17 +7,19 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
+  admob_flutter:
+    path: ../
+  cupertino_icons: ^1.0.2
+  firebase_analytics: ^9.0.4
+  firebase_core: ^1.10.6
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   pedantic: 1.11.0
   flutter_test:
     sdk: flutter
 
-  admob_flutter:
-    path: ../
 
 flutter:
   uses-material-design: true
