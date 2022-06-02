@@ -63,7 +63,7 @@ class AdmobReward(private val flutterPluginBinding: FlutterPlugin.FlutterPluginB
 
         if (allAds[id]!!.isLoaded) {
           allAds[id]!!.show()
-        } else result.error(null, null, null)
+        } else result.error("2", null, null)
       }
       "dispose" -> {
         val id = call.argument<Int>("id")

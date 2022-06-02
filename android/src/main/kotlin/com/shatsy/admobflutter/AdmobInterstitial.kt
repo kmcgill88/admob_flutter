@@ -60,7 +60,7 @@ class AdmobInterstitial(private val flutterPluginBinding: FlutterPlugin.FlutterP
 
         if (allAds[id]!!.isLoaded) {
           allAds[id]!!.show()
-        } else result.error(null, null, null)
+        } else result.error("2", null, null)
       }
       "dispose" -> {
         val id = call.argument<Int>("id")
