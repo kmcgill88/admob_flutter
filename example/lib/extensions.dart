@@ -63,7 +63,7 @@ class TopBannerAdAppRecipe extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: MediaQuery(
-        data: MediaQueryData.fromWindow(WidgetsBinding.instance!.window),
+        data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
         child: Container(
           color: Colors.blueGrey,
           child: Column(children: [
